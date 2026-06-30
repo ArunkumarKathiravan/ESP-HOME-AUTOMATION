@@ -227,3 +227,51 @@ window.addEventListener("load", () => {
     }
 
 });
+
+/*==========================================================
+ SMART HOME AUTOMATION V2
+ Part 4D
+ WEBSITE SIMULATION MODE
+==========================================================*/
+
+const SIMULATION_MODE = true;
+
+/*=========================
+ SIMULATE ESP32
+=========================*/
+
+if (SIMULATION_MODE) {
+
+    console.log("Simulation Mode Enabled");
+
+    db.ref("SmartHome/system").update({
+
+        espOnline: true,
+        firmwareVersion: "Simulation V1.0",
+        wifiRSSI: -45,
+        uptime: 0,
+        lastSeen: Date.now()
+
+    });
+
+}
+
+/*=========================
+ UPDATE LAST SEEN
+=========================*/
+
+setInterval(() => {
+
+    if (SIMULATION_MODE) {
+
+        db.ref("SmartHome/system").update({
+
+            lastSeen: Date.now(),
+
+            uptime: Math.floor(Date.now()/1000)
+
+        });
+
+    }
+
+},5000);
