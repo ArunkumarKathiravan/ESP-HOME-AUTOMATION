@@ -244,7 +244,7 @@ if (SIMULATION_MODE) {
 
     console.log("Simulation Mode Enabled");
 
-    db.ref("SmartHome/system").update({
+    database.ref("SmartHome/system").update({
 
         espOnline: true,
         firmwareVersion: "Simulation V1.0",
@@ -264,7 +264,7 @@ setInterval(() => {
 
     if (SIMULATION_MODE) {
 
-        db.ref("SmartHome/system").update({
+        database.ref("SmartHome/system").update({
 
             lastSeen: Date.now(),
 
