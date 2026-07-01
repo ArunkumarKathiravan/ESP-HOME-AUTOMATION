@@ -626,3 +626,265 @@ if ($("systemStartTime")) {
 addNotification("Dashboard loaded successfully");
 
 console.log("Smart Home Automation V2 Dark Theme loaded");
+
+
+/*=========================================================
+ FIREBASE AUTH LOGIN SYSTEM
+ Email + Password + Email Verification + Forgot Password
+=========================================================*/
+
+const auth = firebase.auth();
+
+/* Auth page elements */
+const authScreen = document.getElementById("authScreen");
+
+const loginForm = document.getElementById("loginForm");
+const signupForm = document.getElementById("signupForm");
+const forgotForm = document.getElementById("forgotForm");
+
+const authMessage = document.getElementById("authMessage");
+
+const loginEmail = document.getElementById("loginEmail");
+const loginPassword = document.getElementById("loginPassword");
+
+const signupName = document.getElementById("signupName");
+const signupEmail = document.getElementById("signupEmail");
+const signupPassword = document.getElementById("signupPassword");
+
+const forgotEmail = document.getElementById("forgotEmail");
+
+const loginBtn = document.getElementById("loginBtn");
+const signupBtn = document.getElementById("signupBtn");
+const forgotBtn = document.getElementById("forgotBtn");
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+const showSignup = document.getElementById("showSignup");
+const showLogin = document.getElementById("showLogin");
+const showForgot = document.getElementById("showForgot");
+const backToLogin = document.getElementById("backToLogin");
+
+/*=========================================================
+ MESSAGE FUNCTION
+=========================================================*/
+
+function showAuthMessage(message, type) {
+    if (!authMessage) {
+        return;
+    }
+
+    authMessage.innerHTML = message;
+    authMessage.className = "auth-message " + type;
+}
+
+/*=========================================================
+ FORM SWITCHING
+=========================================================*/
+
+function openLoginForm() {
+    loginForm.classList.remove("hidden");
+    signupForm.classList.add("hidden");
+    forgotForm.classList.add("hidden");
+
+    showAuthMessage("", "");
+}
+
+function openSignupForm() {
+    loginForm.classList.add("hidden");
+    signupForm.classList.remove("hidden");
+    forgotForm.classList.add("hidden");
+
+    showAuthMessage("", "");
+}
+
+function openForgotForm() {
+    loginForm.classList.add("hidden");
+    signupForm.classList.add("hidden");
+    forgotForm.classList.remove("hidden");
+
+    showAuthMessage("", "");
+}
+
+if (showSignup) {
+    showSignup.addEventListener("click", openSignupForm);
+}
+
+if (showLogin) {
+    showLogin.addEventListener("click", openLoginForm);
+}
+
+if (showForgot) {
+    showForgot.addEventListener("click", openForgotForm);
+}
+
+if (backToLogin) {
+    backToLogin.addEventListener("click", openLoginForm);
+}
+
+/*=========================================================
+ SIGN UP NEW USER
+=========================================================*/
+
+if (signupBtn) {
+    signupBtn.addEventListener("click", () => {
+        const name = signupName.value.trim();
+        const email = signupEmail.value.trim();
+        const password = signupPassword.value.trim();
+
+        if (name === "" || email === "" || password === "") {
+            showAuthMessage("Please fill all signup details.", "error");
+            return;
+        }
+
+        if (password.length < 6) {
+            showAuthMessage("Password must be at least 6 characters.", "error");
+            return;
+        }
+
+        signupBtn.innerHTML = "Creating...";
+
+        auth.createUserWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+
+                return user.updateProfile({
+                    displayName: name
+                }).then(() => {
+                    return user.sendEmailVerification();
+                }).then(() => {
+                    return database.ref("SmartHome/users/" + user.uid).set({
+                        name: name,
+                        email: email,
+                        role: "user",
+                        createdAt: Date.now()
+                    });
+                });
+            })
+            .then(() => {
+                showAuthMessage("Account created. Verification email sent. Please verify your email, then sign in.", "success");
+
+                auth.signOut();
+
+                signupName.value = "";
+                signupEmail.value = "";
+                signupPassword.value = "";
+
+                openLoginForm();
+            })
+            .catch((error) => {
+                showAuthMessage(error.message, "error");
+            })
+            .finally(() => {
+                signupBtn.innerHTML = "Create Account";
+            });
+    });
+}
+
+/*=========================================================
+ SIGN IN EXISTING USER
+=========================================================*/
+
+if (loginBtn) {
+    loginBtn.addEventListener("click", () => {
+        const email = loginEmail.value.trim();
+        const password = loginPassword.value.trim();
+
+        if (email === "" || password === "") {
+            showAuthMessage("Please enter email and password.", "error");
+            return;
+        }
+
+        loginBtn.innerHTML = "Signing in...";
+
+        auth.signInWithEmailAndPassword(email, password)
+            .then((userCredential) => {
+                const user = userCredential.user;
+
+                if (!user.emailVerified) {
+                    user.sendEmailVerification();
+
+                    auth.signOut();
+
+                    showAuthMessage("Email not verified. Verification email sent again.", "error");
+
+                    return;
+                }
+
+                showAuthMessage("Login successful.", "success");
+            })
+            .catch((error) => {
+                showAuthMessage(error.message, "error");
+            })
+            .finally(() => {
+                loginBtn.innerHTML = "Sign In";
+            });
+    });
+}
+
+/*=========================================================
+ FORGOT PASSWORD
+=========================================================*/
+
+if (forgotBtn) {
+    forgotBtn.addEventListener("click", () => {
+        const email = forgotEmail.value.trim();
+
+        if (email === "") {
+            showAuthMessage("Please enter your email.", "error");
+            return;
+        }
+
+        forgotBtn.innerHTML = "Sending...";
+
+        auth.sendPasswordResetEmail(email)
+            .then(() => {
+                showAuthMessage("Password reset email sent. Check your inbox.", "success");
+
+                forgotEmail.value = "";
+
+                openLoginForm();
+            })
+            .catch((error) => {
+                showAuthMessage(error.message, "error");
+            })
+            .finally(() => {
+                forgotBtn.innerHTML = "Send Reset Email";
+            });
+    });
+}
+
+/*=========================================================
+ LOGOUT
+=========================================================*/
+
+if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+        auth.signOut();
+    });
+}
+
+/*=========================================================
+ AUTH STATE CHECK
+ If user logged in and email verified → show dashboard
+ Else → show login page
+=========================================================*/
+
+auth.onAuthStateChanged((user) => {
+    if (!authScreen) {
+        return;
+    }
+
+    if (user && user.emailVerified) {
+        authScreen.style.display = "none";
+
+        if (logoutBtn) {
+            logoutBtn.style.display = "inline-flex";
+        }
+    } else {
+        authScreen.style.display = "flex";
+
+        if (logoutBtn) {
+            logoutBtn.style.display = "none";
+        }
+    }
+});
