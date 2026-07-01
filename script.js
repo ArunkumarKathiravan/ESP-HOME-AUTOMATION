@@ -1120,3 +1120,225 @@ window.addEventListener("load",()=>{
     },1000);
 
 });
+
+
+/*=========================================================
+ DHT11 + KONGALNAGARAM ONLINE WEATHER FALLBACK
+=========================================================*/
+
+const environmentRef = database.ref("SmartHome/environment");
+
+const KONGALNAGARAM_WEATHER = {
+    latitude: 10.6759,
+    longitude: 77.1909,
+    name: "Kongalnagaram"
+};
+
+let latestSensorData = {
+    temperature: null,
+    humidity: null,
+    heatIndex: null,
+    status: "Offline",
+    lastUpdated: 0
+};
+
+function getWeatherMood(temp){
+
+    if(temp === null || temp === undefined || isNaN(temp)){
+        return "Checking...";
+    }
+
+    if(temp < 20){
+        return "🥶 Cold";
+    }
+    else if(temp >= 20 && temp < 30){
+        return "😊 Normal";
+    }
+    else if(temp >= 30 && temp < 35){
+        return "🌤 Warm";
+    }
+    else{
+        return "🔥 Hot";
+    }
+
+}
+
+function updateEnvironmentUI(data, source){
+
+    const temperatureValue = document.getElementById("temperatureValue");
+    const humidityValue = document.getElementById("humidityValue");
+    const heatIndexValue = document.getElementById("heatIndexValue");
+
+    const temperatureStatus = document.getElementById("temperatureStatus");
+    const humidityStatus = document.getElementById("humidityStatus");
+    const heatIndexStatus = document.getElementById("heatIndexStatus");
+
+    const sensorStatus = document.getElementById("sensorStatus");
+    const sensorLastUpdated = document.getElementById("sensorLastUpdated");
+
+    const topTemperatureValue = document.getElementById("topTemperatureValue");
+
+    const weatherMood = document.getElementById("weatherMood");
+    const weatherMiniData = document.getElementById("weatherMiniData");
+
+    const temp = Number(data.temperature);
+    const hum = Number(data.humidity);
+    const feels = Number(data.heatIndex);
+
+    if(temperatureValue){
+        temperatureValue.innerHTML = isNaN(temp) ? "-- °C" : temp.toFixed(1) + " °C";
+    }
+
+    if(humidityValue){
+        humidityValue.innerHTML = isNaN(hum) ? "-- %" : Math.round(hum) + " %";
+    }
+
+    if(heatIndexValue){
+        heatIndexValue.innerHTML = isNaN(feels) ? "-- °C" : feels.toFixed(1) + " °C";
+    }
+
+    if(topTemperatureValue){
+        topTemperatureValue.innerHTML = isNaN(temp) ? "-- °C" : temp.toFixed(1) + " °C";
+    }
+
+    if(temperatureStatus){
+        temperatureStatus.innerHTML = source === "sensor" ? "From DHT11 sensor" : "From online weather";
+    }
+
+    if(humidityStatus){
+        humidityStatus.innerHTML = source === "sensor" ? "From DHT11 sensor" : "From online weather";
+    }
+
+    if(heatIndexStatus){
+        heatIndexStatus.innerHTML = source === "sensor" ? "DHT11 calculated value" : "Online feels-like value";
+    }
+
+    if(sensorStatus){
+        sensorStatus.innerHTML = source === "sensor" ? "DHT11 Online" : "Online Weather";
+        sensorStatus.classList.remove("sensor-online","sensor-offline","sensor-warning");
+
+        if(source === "sensor"){
+            sensorStatus.classList.add("sensor-online");
+        }
+        else{
+            sensorStatus.classList.add("sensor-warning");
+        }
+    }
+
+    if(sensorLastUpdated){
+        const now = new Date();
+        sensorLastUpdated.innerHTML = "Last updated: " + now.toLocaleTimeString();
+    }
+
+    const mood = getWeatherMood(isNaN(feels) ? temp : feels);
+
+    if(weatherMood){
+        weatherMood.innerHTML = mood;
+    }
+
+    if(weatherMiniData){
+        const tempText = isNaN(temp) ? "-- °C" : temp.toFixed(1) + " °C";
+        const humText = isNaN(hum) ? "-- %" : Math.round(hum) + " %";
+        weatherMiniData.innerHTML = tempText + " | " + humText;
+    }
+
+}
+
+function isDHT11DataFresh(data){
+
+    if(!data){
+        return false;
+    }
+
+    if(data.temperature === undefined || data.humidity === undefined){
+        return false;
+    }
+
+    const last = Number(data.lastUpdated || 0);
+    const now = Date.now();
+
+    // Sensor data valid only for 2 minutes
+    if(now - last > 120000){
+        return false;
+    }
+
+    return true;
+
+}
+
+async function loadKongalnagaramWeather(){
+
+    try{
+
+        const url =
+            "https://api.open-meteo.com/v1/forecast" +
+            "?latitude=" + KONGALNAGARAM_WEATHER.latitude +
+            "&longitude=" + KONGALNAGARAM_WEATHER.longitude +
+            "&current=temperature_2m,relative_humidity_2m,apparent_temperature" +
+            "&timezone=auto";
+
+        const response = await fetch(url);
+        const weather = await response.json();
+
+        const current = weather.current;
+
+        const onlineData = {
+            temperature: current.temperature_2m,
+            humidity: current.relative_humidity_2m,
+            heatIndex: current.apparent_temperature,
+            status: "Online Weather",
+            lastUpdated: Date.now()
+        };
+
+        updateEnvironmentUI(onlineData, "online");
+
+    }
+    catch(error){
+
+        console.log("Weather API Error:", error);
+
+        const sensorStatus = document.getElementById("sensorStatus");
+        const sensorLastUpdated = document.getElementById("sensorLastUpdated");
+
+        if(sensorStatus){
+            sensorStatus.innerHTML = "No Data";
+            sensorStatus.classList.remove("sensor-online","sensor-warning");
+            sensorStatus.classList.add("sensor-offline");
+        }
+
+        if(sensorLastUpdated){
+            sensorLastUpdated.innerHTML = "DHT11 and online weather unavailable";
+        }
+
+    }
+
+}
+
+environmentRef.on("value",(snapshot)=>{
+
+    const data = snapshot.val();
+
+    latestSensorData = data || latestSensorData;
+
+    if(isDHT11DataFresh(data)){
+        updateEnvironmentUI(data, "sensor");
+    }
+    else{
+        loadKongalnagaramWeather();
+    }
+
+});
+
+// Check again every 60 seconds
+setInterval(()=>{
+
+    if(isDHT11DataFresh(latestSensorData)){
+        updateEnvironmentUI(latestSensorData, "sensor");
+    }
+    else{
+        loadKongalnagaramWeather();
+    }
+
+},60000);
+
+console.log("DHT11 + Weather fallback loaded");
