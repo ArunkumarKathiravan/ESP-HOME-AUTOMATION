@@ -1,1946 +1,875 @@
-/* =====================================================
-   SMART HOME AUTOMATION V2
-   PART 2A
-   Developed by Arunkumar
-===================================================== */
-
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:'Poppins',sans-serif;
-}
-
-html{
-    scroll-behavior:smooth;
-}
-
-body{
-
-    background:linear-gradient(135deg,#0f172a,#1e293b,#111827);
-
-    min-height:100vh;
-
-    color:#ffffff;
-
-    overflow-x:hidden;
-
-}
-
-/* ================= LOADER ================= */
-
-.loader{
-
-    position:fixed;
-
-    inset:0;
-
-    background:#0f172a;
-
-    display:flex;
-
-    flex-direction:column;
-
-    justify-content:center;
-
-    align-items:center;
-
-    gap:20px;
-
-    z-index:9999;
-
-}
-
-.spinner{
-
-    width:70px;
-
-    height:70px;
-
-    border-radius:50%;
-
-    border:6px solid rgba(255,255,255,.2);
-
-    border-top:6px solid #38bdf8;
-
-    animation:spin 1s linear infinite;
-
-}
-
-@keyframes spin{
-
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
-
-}
-
-/* ================= MAIN ================= */
-
-.container{
-
-    width:95%;
-
-    max-width:1450px;
-
-    margin:auto;
-
-    padding:25px;
-
-}
-
-/* ================= HEADER ================= */
-
-header{
-
-display:flex;
-
-justify-content:space-between;
-
-align-items:center;
-
-flex-wrap:wrap;
-
-padding:20px 30px;
-
-margin-top:20px;
-
-border-radius:25px;
-
-background:rgba(255,255,255,.08);
-
-backdrop-filter:blur(18px);
-
-box-shadow:0 8px 25px rgba(0,0,0,.35);
-
-}
-
-.logo{
-
-display:flex;
-
-align-items:center;
-
-gap:15px;
-
-}
-
-.logo i{
-
-font-size:40px;
-
-color:#38bdf8;
-
-}
-
-.logo h1{
-
-font-size:34px;
-
-font-weight:700;
-
-}
-
-.datetime{
-
-text-align:right;
-
-}
-
-.datetime p{
-
-font-size:15px;
-
-opacity:.9;
-
-}
-
-/* ================= TITLE ================= */
-
-.dashboard-title{
-
-margin-top:30px;
-
-padding:25px;
-
-border-radius:20px;
-
-background:rgba(255,255,255,.05);
-
-backdrop-filter:blur(15px);
-
-}
-
-.dashboard-title h2{
-
-font-size:34px;
-
-margin-bottom:10px;
-
-}
-
-.dashboard-title p{
-
-font-size:16px;
-
-opacity:.85;
-
-}
-
-/* ================= STATUS ================= */
-
-.status-grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-
-gap:20px;
-
-margin-top:30px;
-
-}
-
-.status-card{
-
-display:flex;
-
-align-items:center;
-
-gap:20px;
-
-padding:22px;
-
-background:rgba(255,255,255,.07);
-
-border-radius:22px;
-
-backdrop-filter:blur(18px);
-
-transition:.35s;
-
-cursor:pointer;
-
-}
-
-.status-card:hover{
-
-transform:translateY(-8px);
-
-box-shadow:0 12px 30px rgba(0,0,0,.4);
-
-}
-
-.icon{
-
-width:70px;
-
-height:70px;
-
-border-radius:50%;
-
-display:flex;
-
-justify-content:center;
-
-align-items:center;
-
-font-size:28px;
-
-}
-
-.wifi{
-
-background:#2563eb;
-
-}
-
-.firebase{
-
-background:#ea580c;
-
-}
-
-.esp{
-
-background:#059669;
-
-}
-
-.update{
-
-background:#7c3aed;
-
-}
-
-.status-card h3{
-
-font-size:19px;
-
-margin-bottom:4px;
-
-}
-
-.status-card p{
-
-font-size:15px;
-
-opacity:.85;
-
-}
-
-/* ================= SUMMARY ================= */
-
-.summary{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-
-gap:20px;
-
-margin-top:35px;
-
-}
-
-.summary-card{
-
-padding:28px;
-
-border-radius:25px;
-
-background:rgba(255,255,255,.06);
-
-backdrop-filter:blur(20px);
-
-text-align:center;
-
-transition:.3s;
-
-}
-
-.summary-card:hover{
-
-transform:scale(1.04);
-
-}
-
-.summary-card h3{
-
-font-size:18px;
-
-margin-bottom:15px;
-
-}
-
-.summary-card h1{
-
-font-size:42px;
-
-color:#38bdf8;
-
-}
-
-/* ================= SECTION ================= */
-
-.device-section,
-.statistics,
-.history{
-
-margin-top:45px;
-
-}
-
-.device-section h2,
-.statistics h2,
-.history h2{
-
-margin-bottom:20px;
-
-font-size:30px;
-
-}
-
-.device-grid{
-
-display:grid;
-
-grid-template-columns:repeat(auto-fit,minmax(310px,1fr));
-
-gap:25px;
-
-}
-/* =====================================================
-   SMART HOME AUTOMATION V2
-   PART 2B
-===================================================== */
-
-/* ================= DEVICE CARD ================= */
-
-.device-card{
-
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(18px);
-
-    border-radius:25px;
-
-    padding:25px;
-
-    transition:.35s;
-
-    box-shadow:0 10px 25px rgba(0,0,0,.30);
-
-    border:1px solid rgba(255,255,255,.08);
-
-}
-
-.device-card:hover{
-
-    transform:translateY(-8px);
-
-    box-shadow:0 18px 40px rgba(0,0,0,.45);
-
-}
-
-.device-header{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin-bottom:25px;
-
-}
-
-.device-header div:last-child{
-
-    flex:1;
-
-    margin-left:18px;
-
-}
-
-.device-header h3{
-
-    font-size:24px;
-
-}
-
-.device-header p{
-
-    opacity:.75;
-
-    margin-top:5px;
-
-}
-
-/* ================= ICONS ================= */
-
-.device-icon{
-
-    width:70px;
-
-    height:70px;
-
-    border-radius:50%;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:30px;
-
-}
-
-.device-icon.fan{
-
-    background:#2563eb;
-
-}
-
-.device-icon.light{
-
-    background:#f59e0b;
-
-}
-
-.device-icon.socket{
-
-    background:#10b981;
-
-}
-
-/* ================= BODY ================= */
-
-.device-body{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    margin:30px 0;
-
-}
-
-.device-body h2{
-
-    font-size:34px;
-
-    letter-spacing:2px;
-
-}
-
-/* ================= TOGGLE ================= */
-
-.switch{
-
-    position:relative;
-
-    width:72px;
-
-    height:38px;
-
-}
-
-.switch input{
-
-    display:none;
-
-}
-
-.slider{
-
-    position:absolute;
-
-    inset:0;
-
-    background:#6b7280;
-
-    border-radius:50px;
-
-    transition:.35s;
-
-    cursor:pointer;
-
-}
-
-.slider:before{
-
-    content:"";
-
-    position:absolute;
-
-    width:30px;
-
-    height:30px;
-
-    left:4px;
-
-    top:4px;
-
-    background:white;
-
-    border-radius:50%;
-
-    transition:.35s;
-
-}
-
-input:checked + .slider{
-
-    background:#22c55e;
-
-}
-
-input:checked + .slider:before{
-
-    transform:translateX(34px);
-
-}
-
-/* ================= FOOTER ================= */
-
-.device-footer{
-
-    display:flex;
-
-    justify-content:space-between;
-
-    align-items:center;
-
-    border-top:1px solid rgba(255,255,255,.10);
-
-    padding-top:18px;
-
-    font-size:15px;
-
-    opacity:.8;
-
-}
-
-/* ================= STATISTICS ================= */
-
-.stats-grid{
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-
-    gap:25px;
-
-}
-
-.stats-card{
-
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(18px);
-
-    border-radius:25px;
-
-    padding:25px;
-
-    transition:.3s;
-
-}
-
-.stats-card:hover{
-
-    transform:translateY(-6px);
-
-}
-
-.stats-card h3{
-
-    margin-bottom:18px;
-
-    font-size:22px;
-
-}
-
-.stats-card p{
-
-    opacity:.8;
-
-    margin-top:12px;
-
-}
-
-.stats-card h2{
-
-    margin-top:5px;
-
-    color:#38bdf8;
-
-}
-
-.stats-card hr{
-
-    border:none;
-
-    height:1px;
-
-    background:rgba(255,255,255,.10);
-
-    margin:15px 0;
-
-}
-
-/* ================= SYSTEM INFO ================= */
-
-.system-info{
-
-    margin-top:35px;
-
-    display:grid;
-
-    grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-
-    gap:20px;
-
-}
-
-.info-card{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:18px;
-
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(15px);
-
-    border-radius:20px;
-
-    padding:22px;
-
-}
-
-.info-card i{
-
-    font-size:28px;
-
-    color:#38bdf8;
-
-}
-
-/* ================= HISTORY ================= */
-
-.history-list{
-
-    display:flex;
-
-    flex-direction:column;
-
-    gap:18px;
-
-}
-
-.history-item{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:20px;
-
-    background:rgba(255,255,255,.08);
-
-    padding:20px;
-
-    border-radius:20px;
-
-}
-
-.history-icon{
-
-    width:55px;
-
-    height:55px;
-
-    background:#3b82f6;
-
-    border-radius:50%;
-
-    display:flex;
-
-    justify-content:center;
-
-    align-items:center;
-
-    font-size:22px;
-
-}
-
-/* ================= NOTIFICATION ================= */
-
-.notification-area{
-
-    margin-top:35px;
-
-}
-
-.notification-card{
-
-    display:flex;
-
-    align-items:center;
-
-    gap:20px;
-
-    background:rgba(255,255,255,.08);
-
-    backdrop-filter:blur(20px);
-
-    border-radius:22px;
-
-    padding:25px;
-
-}
-
-.notification-card i{
-
-    font-size:32px;
-
-    color:#facc15;
-
-}
-
-/* ================= FOOTER ================= */
-
-footer{
-
-    margin-top:50px;
-
-    padding:30px;
-
-    text-align:center;
-
-    opacity:.8;
-
-    border-top:1px solid rgba(255,255,255,.08);
-
-}
-
-/* ================= SCROLL BAR ================= */
-
-::-webkit-scrollbar{
-
-    width:10px;
-
-}
-
-::-webkit-scrollbar-thumb{
-
-    background:#38bdf8;
-
-    border-radius:20px;
-
-}
-
-::-webkit-scrollbar-track{
-
-    background:#111827;
-
-}
-
-/* ================= MOBILE ================= */
-
-@media(max-width:768px){
-
-header{
-
-    flex-direction:column;
-
-    gap:20px;
-
-    text-align:center;
-
-}
-
-.datetime{
-
-    text-align:center;
-
-}
-
-.device-body{
-
-    flex-direction:column;
-
-    gap:20px;
-
-}
-
-.summary-card h1{
-
-    font-size:32px;
-
-}
-
-.dashboard-title h2{
-
-    font-size:28px;
-
-}
-
-.device-header h3{
-
-    font-size:20px;
-
-}
-
-}
-/* =====================================================
-   SMART HOME AUTOMATION V2
-   PART 2C
-   PREMIUM UI
-=====================================================*/
-
-/* ---------- PAGE ANIMATION ---------- */
-
-body{
-    animation:fadeIn .8s ease;
-}
-
-@keyframes fadeIn{
-
-from{
-
-opacity:0;
-
-transform:translateY(15px);
-
-}
-
-to{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-}
-
-/* ---------- CARD ENTRY ---------- */
-
-.device-card,
-.summary-card,
-.status-card,
-.stats-card,
-.info-card,
-.notification-card{
-
-animation:cardAnimation .7s ease;
-
-}
-
-@keyframes cardAnimation{
-
-0%{
-
-opacity:0;
-
-transform:translateY(30px);
-
-}
-
-100%{
-
-opacity:1;
-
-transform:translateY(0);
-
-}
-
-}
-
-/* ---------- GLOW ---------- */
-
-.device-card:hover{
-
-border:1px solid #38bdf8;
-
-box-shadow:
-
-0 0 20px rgba(56,189,248,.35),
-
-0 0 50px rgba(56,189,248,.15);
-
-}
-
-.summary-card:hover{
-
-box-shadow:
-
-0 0 20px rgba(59,130,246,.35);
-
-}
-
-.status-card:hover{
-
-box-shadow:
-
-0 0 20px rgba(34,197,94,.30);
-
-}
-
-/* ---------- ONLINE BADGE ---------- */
-
-.online{
-
-display:inline-block;
-
-padding:6px 14px;
-
-background:#22c55e;
-
-color:white;
-
-border-radius:50px;
-
-font-size:13px;
-
-font-weight:600;
-
-animation:pulseGreen 2s infinite;
-
-}
-
-.offline{
-
-display:inline-block;
-
-padding:6px 14px;
-
-background:#ef4444;
-
-color:white;
-
-border-radius:50px;
-
-font-size:13px;
-
-font-weight:600;
-
-}
-
-/* ---------- PULSE ---------- */
-
-@keyframes pulseGreen{
-
-0%{
-
-box-shadow:0 0 0 0 rgba(34,197,94,.8);
-
-}
-
-70%{
-
-box-shadow:0 0 0 15px rgba(34,197,94,0);
-
-}
-
-100%{
-
-box-shadow:0 0 0 0 rgba(34,197,94,0);
-
-}
-
-}
-
-/* ---------- DEVICE STATUS ---------- */
-
-.on-state{
-
-color:#22c55e;
-
-font-weight:bold;
-
-text-shadow:
-
-0 0 12px rgba(34,197,94,.7);
-
-}
-
-.off-state{
-
-color:#ef4444;
-
-font-weight:bold;
-
-}
-
-/* ---------- PROGRESS BAR ---------- */
-
-.progress{
-
-width:100%;
-
-height:12px;
-
-background:#374151;
-
-border-radius:30px;
-
-overflow:hidden;
-
-margin-top:12px;
-
-}
-
-.progress-value{
-
-height:100%;
-
-width:0%;
-
-background:linear-gradient(90deg,#22c55e,#38bdf8);
-
-border-radius:30px;
-
-transition:1s;
-
-}
-
-/* ---------- HISTORY ---------- */
-
-.history-item{
-
-transition:.3s;
-
-}
-
-.history-item:hover{
-
-transform:translateX(8px);
-
-}
-
-/* ---------- NOTIFICATION ---------- */
-
-.notification-card{
-
-position:relative;
-
-overflow:hidden;
-
-}
-
-.notification-card::after{
-
-content:"";
-
-position:absolute;
-
-left:-120%;
-
-top:0;
-
-height:100%;
-
-width:120px;
-
-background:
-
-linear-gradient(
-
-90deg,
-
-transparent,
-
-rgba(255,255,255,.35),
-
-transparent
-
-);
-
-animation:shine 5s infinite;
-
-}
-
-@keyframes shine{
-
-100%{
-
-left:150%;
-
-}
-
-}
-
-/* ---------- BUTTON EFFECT ---------- */
-
-.switch:hover{
-
-transform:scale(1.08);
-
-}
-
-/* ---------- DEVICE ICON ---------- */
-
-.device-icon{
-
-transition:.35s;
-
-}
-
-.device-card:hover .device-icon{
-
-transform:rotate(15deg) scale(1.1);
-
-}
-
-/* ---------- FAN ---------- */
-
-.device-card:hover .fa-fan{
-
-animation:fanRotate 1s linear infinite;
-
-}
-
-@keyframes fanRotate{
-
-100%{
-
-transform:rotate(360deg);
-
-}
-
-}
-
-/* ---------- LIGHT ---------- */
-
-.device-card:hover .fa-lightbulb{
-
-animation:lightGlow 1.2s infinite;
-
-}
-
-@keyframes lightGlow{
-
-0%{
-
-filter:drop-shadow(0 0 2px yellow);
-
-}
-
-50%{
-
-filter:drop-shadow(0 0 18px yellow);
-
-}
-
-100%{
-
-filter:drop-shadow(0 0 2px yellow);
-
-}
-
-}
-
-/* ---------- SOCKET ---------- */
-
-.device-card:hover .fa-plug-circle-bolt{
-
-animation:plugFlash 1s infinite;
-
-}
-
-@keyframes plugFlash{
-
-0%{
-
-color:#22c55e;
-
-}
-
-50%{
-
-color:#38bdf8;
-
-}
-
-100%{
-
-color:#22c55e;
-
-}
-
-}
-
-/* ---------- SCROLL ---------- */
-
-.history-list{
-
-max-height:450px;
-
-overflow-y:auto;
-
-padding-right:8px;
-
-}
-
-/* ---------- GLASS ---------- */
-
-.device-card,
-
-.status-card,
-
-.summary-card,
-
-.stats-card,
-
-.info-card,
-
-.notification-card{
-
-border:1px solid rgba(255,255,255,.08);
-
-}
-
-/* ---------- FOOTER ---------- */
-
-footer{
-
-margin-top:70px;
-
-font-size:15px;
-
-letter-spacing:1px;
-
-opacity:.75;
-
-}
-
-/* ---------- RESPONSIVE ---------- */
-
-@media(max-width:600px){
-
-.device-card{
-
-padding:18px;
-
-}
-
-.device-header h3{
-
-font-size:20px;
-
-}
-
-.device-body h2{
-
-font-size:28px;
-
-}
-
-.summary-card h1{
-
-font-size:30px;
-
-}
-
-.dashboard-title h2{
-
-font-size:25px;
-
-}
-
-.status-card{
-
-padding:18px;
-
-}
-
-.stats-card{
-
-padding:18px;
-
-}
-
+/*=========================================================
+ SMART HOME AUTOMATION V2
+ STYLE.CSS PART A
+ BASIC DESIGN + HEADER + DASHBOARD
+=========================================================*/
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Poppins", sans-serif;
+    min-height: 100vh;
+    background: linear-gradient(135deg, #141e30, #243b55);
+    color: #ffffff;
+}
+
+.app {
+    width: 100%;
+    min-height: 100vh;
 }
 
 /*=========================================================
- DHT11 ENVIRONMENT SENSOR SECTION
+ FULL WIDTH HEADER
+ NO CURVED CORNERS
 =========================================================*/
 
-.environment-section {
-    margin-top: 30px;
-    margin-bottom: 30px;
+.main-header {
+    width: 100%;
+    min-height: 105px;
+    padding: 22px 40px;
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.15);
 }
 
-.environment-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 18px;
-    margin-top: 20px;
-}
-
-.environment-card {
-    background: rgba(255, 255, 255, 0.95);
-    border-radius: 18px;
-    padding: 22px;
+.header-left {
     display: flex;
     align-items: center;
     gap: 18px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.12);
-    transition: 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.logo-icon {
+    width: 62px;
+    height: 62px;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.16);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 30px;
+}
+
+.logo-text h1 {
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 0.5px;
+}
+
+.logo-text p {
+    font-size: 14px;
+    opacity: 0.85;
+    margin-top: 2px;
+}
+
+.header-right {
+    display: flex;
+    align-items: center;
+}
+
+.date-time-box {
+    text-align: center;
+    min-width: 230px;
+}
+
+.header-date {
+    font-size: 15px;
+    font-weight: 600;
+    opacity: 0.9;
+    margin-bottom: 4px;
+}
+
+.header-time {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.header-temperature {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 7px 16px;
+    border-radius: 20px;
+    font-size: 15px;
+    font-weight: 800;
+    background: rgba(255, 255, 255, 0.18);
+}
+
+#topTemperatureValue {
+    font-weight: 800;
+}
+
+/*=========================================================
+ MAIN CONTENT
+=========================================================*/
+
+.main-content {
+    width: 100%;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 30px 28px 45px;
+}
+
+/*=========================================================
+ COMMON SECTION HEADING
+=========================================================*/
+
+.section-heading {
+    margin-bottom: 20px;
+}
+
+.section-heading h2 {
+    font-size: 26px;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.section-heading p {
+    margin-top: 6px;
+    font-size: 14px;
+    opacity: 0.82;
+}
+
+/*=========================================================
+ DASHBOARD PLATE
+=========================================================*/
+
+.dashboard-section {
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.dashboard-plate {
+    min-height: 135px;
+    padding: 32px 38px;
+    border-radius: 0;
+    background: rgba(255, 255, 255, 0.10);
+    backdrop-filter: blur(12px);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    border: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.dashboard-left h1 {
+    font-size: 38px;
+    font-weight: 800;
+    margin-bottom: 10px;
+}
+
+.dashboard-left p {
+    font-size: 16px;
+    opacity: 0.9;
+}
+
+.dashboard-weather-box {
+    width: 250px;
+    min-width: 250px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.14);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+.weather-label {
+    font-size: 13px;
+    font-weight: 600;
+    opacity: 0.85;
+    margin-bottom: 8px;
+}
+
+.weather-mood,
+#weatherMood {
+    font-size: 24px;
+    font-weight: 800;
+    margin-bottom: 8px;
+    color: #38bdf8;
+}
+
+.weather-mini-data,
+#weatherMiniData {
+    font-size: 15px;
+    font-weight: 700;
+    opacity: 0.95;
+}
+
+/*=========================================================
+ SMART HOME AUTOMATION V2
+ STYLE.CSS PART B
+ DEVICE CARDS + STATUS + SUMMARY
+=========================================================*/
+
+/*=========================================================
+ DEVICE CONTROL SECTION
+=========================================================*/
+
+.device-section {
+    width: 100%;
+    margin-bottom: 32px;
+}
+
+.device-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 22px;
+}
+
+/*=========================================================
+ DEVICE CARD
+=========================================================*/
+
+.device-card {
+    min-height: 230px;
+    padding: 24px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #111827;
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.16);
+    transition: 0.25s ease;
+}
+
+.device-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 22px 45px rgba(0, 0, 0, 0.22);
+}
+
+.device-header {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 28px;
+}
+
+.device-icon {
+    width: 54px;
+    height: 54px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #ffffff;
+}
+
+.device-icon.fan {
+    background: linear-gradient(135deg, #0ea5e9, #0369a1);
+}
+
+.device-icon.light {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+}
+
+.device-icon.socket {
+    background: linear-gradient(135deg, #22c55e, #15803d);
+}
+
+.device-header h3 {
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.device-header p {
+    font-size: 13px;
+    margin-top: 3px;
+    color: #6b7280;
+}
+
+.device-body {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 26px;
+}
+
+.device-body h2 {
+    font-size: 30px;
+    font-weight: 800;
+    color: #ef4444;
+}
+
+.device-card.active .device-body h2 {
+    color: #22c55e;
+}
+
+.device-footer {
+    padding-top: 16px;
+    border-top: 1px solid #e5e7eb;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/*=========================================================
+ TOGGLE SWITCH
+=========================================================*/
+
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 66px;
+    height: 36px;
+}
+
+.switch input {
+    display: none;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    inset: 0;
+    background: #d1d5db;
+    border-radius: 999px;
+    transition: 0.3s;
+}
+
+.slider::before {
+    content: "";
+    position: absolute;
+    width: 28px;
+    height: 28px;
+    left: 4px;
+    top: 4px;
+    background: #ffffff;
+    border-radius: 50%;
+    transition: 0.3s;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+}
+
+.switch input:checked + .slider {
+    background: linear-gradient(135deg, #22c55e, #16a34a);
+}
+
+.switch input:checked + .slider::before {
+    transform: translateX(30px);
+}
+
+/*=========================================================
+ STATUS GRID
+ WIFI / FIREBASE / ESP32 / LAST UPDATE
+=========================================================*/
+
+.status-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 24px;
+}
+
+.status-card {
+    min-height: 110px;
+    padding: 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+}
+
+.status-card .icon,
+.icon {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #ffffff;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.icon.wifi {
+    background: linear-gradient(135deg, #06b6d4, #0284c7);
+}
+
+.icon.firebase {
+    background: linear-gradient(135deg, #f97316, #ea580c);
+}
+
+.icon.esp {
+    background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+}
+
+.icon.update {
+    background: linear-gradient(135deg, #14b8a6, #0f766e);
+}
+
+.status-card h3 {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.status-card p {
+    font-size: 14px;
+    color: #4b5563;
+    font-weight: 600;
+}
+
+/*=========================================================
+ SUMMARY GRID
+ DEVICES / RUNNING / OPERATIONS / RUNTIME
+=========================================================*/
+
+.summary {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+    margin-bottom: 42px;
+}
+
+.summary-card {
+    min-height: 125px;
+    padding: 22px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #111827;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+}
+
+.summary-card h3 {
+    font-size: 15px;
+    font-weight: 700;
+    color: #4b5563;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+.summary-card h1 {
+    font-size: 36px;
+    font-weight: 800;
+    color: #111827;
+}
+
+/*=========================================================
+ STATUS TEXT COLORS
+=========================================================*/
+
+.online,
+.connected,
+.sensor-online {
+    color: #16a34a !important;
+    font-weight: 800;
+}
+
+.offline,
+.disconnected,
+.sensor-offline {
+    color: #dc2626 !important;
+    font-weight: 800;
+}
+
+.warning,
+.sensor-warning {
+    color: #f59e0b !important;
+    font-weight: 800;
+}
+
+/*=========================================================
+ SMALL ANIMATIONS
+=========================================================*/
+
+.device-card,
+.status-card,
+.summary-card {
+    animation: cardFadeIn 0.45s ease;
+}
+
+@keyframes cardFadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/*=========================================================
+ SMART HOME AUTOMATION V2
+ STYLE.CSS PART C
+ ENVIRONMENT + STATISTICS + HISTORY + FOOTER + RESPONSIVE
+=========================================================*/
+
+/*=========================================================
+ ENVIRONMENT MONITORING SECTION
+=========================================================*/
+
+.environment-section {
+    width: 100%;
+    margin-top: 10px;
+    margin-bottom: 42px;
+    padding-top: 34px;
+    border-top: 2px solid rgba(255, 255, 255, 0.32);
+}
+
+.environment-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+.environment-card {
+    min-height: 150px;
+    padding: 22px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+    transition: 0.25s ease;
 }
 
 .environment-card:hover {
-    transform: translateY(-6px);
-    box-shadow: 0 16px 35px rgba(0, 0, 0, 0.18);
+    transform: translateY(-5px);
 }
 
 .environment-icon {
     width: 58px;
     height: 58px;
-    border-radius: 16px;
+    border-radius: 18px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 32px;
-    background: rgba(0, 0, 0, 0.06);
+    color: #ffffff;
+    font-size: 26px;
+    flex-shrink: 0;
+}
+
+.temperature-card .environment-icon {
+    background: linear-gradient(135deg, #ef4444, #b91c1c);
+}
+
+.humidity-card .environment-icon {
+    background: linear-gradient(135deg, #38bdf8, #0284c7);
+}
+
+.heat-card .environment-icon {
+    background: linear-gradient(135deg, #f97316, #c2410c);
+}
+
+.sensor-card .environment-icon {
+    background: linear-gradient(135deg, #22c55e, #15803d);
 }
 
 .environment-info h3 {
     font-size: 15px;
-    margin-bottom: 8px;
-    color: #444;
+    font-weight: 700;
+    color: #4b5563;
+    margin-bottom: 6px;
 }
 
 .environment-info h1 {
-    font-size: 28px;
-    margin-bottom: 6px;
-    color: #111;
+    font-size: 27px;
+    font-weight: 800;
+    color: #111827;
+    margin-bottom: 5px;
 }
 
 .environment-info p {
     font-size: 13px;
-    color: #666;
-}
-
-/* Temperature Card */
-.temperature-card {
-    border-left: 5px solid #ff6b6b;
-}
-
-/* Humidity Card */
-.humidity-card {
-    border-left: 5px solid #4dabf7;
-}
-
-/* Heat Index Card */
-.heat-card {
-    border-left: 5px solid #ff922b;
-}
-
-/* Sensor Status Card */
-.sensor-card {
-    border-left: 5px solid #51cf66;
-}
-
-/* Sensor Online / Offline Text */
-.sensor-online {
-    color: #2f9e44 !important;
-}
-
-.sensor-offline {
-    color: #e03131 !important;
-}
-
-.sensor-warning {
-    color: #f08c00 !important;
-}
-
-/* Mobile Responsive */
-@media (max-width: 1100px) {
-    .environment-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 650px) {
-    .environment-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .environment-card {
-        padding: 18px;
-    }
-
-    .environment-info h1 {
-        font-size: 25px;
-    }
+    color: #6b7280;
+    font-weight: 500;
 }
 
 /*=========================================================
- MOVE DHT11 SENSOR SECTION BELOW DEVICE CARDS
+ STATISTICS SECTION
 =========================================================*/
 
-.environment-section {
+.statistics {
     width: 100%;
-    display: block;
-    clear: both;
-    margin-top: 45px;
-    padding-top: 30px;
-    border-top: 2px solid rgba(255, 255, 255, 0.35);
+    margin-bottom: 42px;
 }
 
-/* Make sensor cards stay in one full row below devices */
-.environment-grid {
+.stats-grid {
     width: 100%;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 18px;
 }
 
-/* Force the environment section to start on a new line */
-.device-section,
-.devices-section,
-.device-grid {
-    margin-bottom: 35px;
+.stats-card {
+    min-height: 360px;
+    padding: 24px;
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #111827;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
 }
 
-/* Better spacing for environment title */
-.environment-section .section-title {
-    margin-bottom: 18px;
-}
-
-/* Mobile responsive */
-@media (max-width: 1100px) {
-    .environment-grid {
-        grid-template-columns: repeat(2, 1fr);
-    }
-}
-
-@media (max-width: 650px) {
-    .environment-grid {
-        grid-template-columns: 1fr;
-    }
-}
-/*=========================================================
- TOP TEMPERATURE DISPLAY
-=========================================================*/
-
-.top-temperature-box {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    margin-left: 12px;
-    padding: 7px 14px;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 600;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.18);
-    backdrop-filter: blur(8px);
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.12);
-}
-
-#topTemperatureValue {
-    color: #ffffff;
-    font-weight: 700;
-}
-
-
-/*=========================================================
- HEADER DATE TIME TEMPERATURE ALIGNMENT
-=========================================================*/
-
-.header-center-info {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    text-align: center;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-}
-
-.header-date {
-    font-size: 15px;
-    font-weight: 600;
-    color: #ffffff;
-    opacity: 0.9;
-}
-
-.header-time {
-    font-size: 15px;
-    font-weight: 700;
-    color: #ffffff;
-}
-
-.header-temperature {
-    margin-top: 4px;
-    padding: 6px 14px;
-    border-radius: 18px;
-    font-size: 14px;
-    font-weight: 700;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.18);
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-}
-
-#topTemperatureValue {
-    color: #ffffff;
+.stats-card h3 {
+    font-size: 20px;
     font-weight: 800;
-}
-
-/* remove old right side temperature style if it exists */
-.top-temperature-box {
-    display: none !important;
-}
-
-/*=========================================================
- FINAL LAYOUT ORDER FIX
-=========================================================*/
-
-.dashboard-plate {
-    display: flex !important;
+    margin-bottom: 18px;
+    display: flex;
     align-items: center;
-    justify-content: space-between;
-    gap: 20px;
+    gap: 10px;
 }
 
-.dashboard-left h1 {
+.stats-card p {
+    font-size: 13px;
+    color: #6b7280;
+    margin-bottom: 4px;
+}
+
+.stats-card h2 {
+    font-size: 24px;
+    font-weight: 800;
+    color: #111827;
     margin-bottom: 12px;
 }
 
-.dashboard-weather-box {
-    min-width: 230px;
-    padding: 16px 20px;
-    border-radius: 18px;
-    background: rgba(255, 255, 255, 0.12);
-    text-align: right;
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-}
-
-.weather-label {
-    font-size: 13px;
-    opacity: 0.8;
-    margin-bottom: 6px;
-}
-
-.weather-mood {
-    font-size: 22px;
-    font-weight: 800;
-    color: #38bdf8;
-    margin-bottom: 5px;
-}
-
-.weather-mini-data {
-    font-size: 14px;
-    font-weight: 600;
-    color: #ffffff;
-    opacity: 0.9;
-}
-
-
-/*=========================================================
- DEVICE CONTROL SHOULD COME ABOVE STATUS CARDS
-=========================================================*/
-
-.devices-section {
-    margin-top: 30px;
-    margin-bottom: 45px;
-}
-
-.device-grid {
-    margin-bottom: 0 !important;
-}
-
-
-/*=========================================================
- DHT11 ENVIRONMENT SECTION FULL WIDTH
-=========================================================*/
-
-.environment-section {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: block !important;
-    clear: both !important;
-    grid-column: 1 / -1 !important;
-
-    margin-top: 40px !important;
-    margin-bottom: 45px !important;
-    padding-top: 35px !important;
-
-    border-top: 2px solid rgba(255, 255, 255, 0.35) !important;
-}
-
-.environment-section::before {
-    content: "";
-    display: block;
-    width: 100%;
+.stats-card hr {
+    border: none;
     height: 1px;
-}
-
-.environment-section .section-title {
+    background: #e5e7eb;
+    margin: 12px 0;
     width: 100%;
-    margin-bottom: 22px;
 }
 
-.environment-section .section-title h2 {
-    white-space: normal;
-}
-
-.environment-grid {
-    width: 100% !important;
-    max-width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 18px !important;
-}
-
-
-/*=========================================================
- FINAL HEADER + DASHBOARD + ORDER DESIGN FIX
-=========================================================*/
-
-/* Main page container */
-.container {
+.progress {
     width: 100%;
-    max-width: 1250px;
-    margin: 0 auto;
-    padding: 25px;
+    height: 9px;
+    border-radius: 999px;
+    background: #e5e7eb;
+    overflow: hidden;
+    margin-top: 18px;
 }
 
-/* Header full rounded box */
-.header {
-    width: 100% !important;
-    border-radius: 24px !important;
-    padding: 35px 45px !important;
-    margin-bottom: 28px !important;
-    background: rgba(255, 255, 255, 0.08) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    box-sizing: border-box !important;
+.progress-value {
+    width: 0%;
+    height: 100%;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #22c55e, #16a34a);
 }
-
-/* Dashboard full green marked box */
-.dashboard-plate,
-.dashboard-section {
-    width: 100% !important;
-    min-height: 130px !important;
-    border-radius: 24px !important;
-    padding: 35px 45px !important;
-    margin-bottom: 32px !important;
-    background: rgba(255, 255, 255, 0.08) !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 25px !important;
-    box-sizing: border-box !important;
-}
-
-/* Dashboard text */
-.dashboard-left {
-    flex: 1 !important;
-}
-
-.dashboard-left h1 {
-    font-size: 36px !important;
-    margin: 0 0 14px 0 !important;
-    color: #ffffff !important;
-}
-
-.dashboard-left p {
-    font-size: 16px !important;
-    margin: 0 !important;
-    color: rgba(255, 255, 255, 0.9) !important;
-}
-
-/* Weather box inside dashboard only */
-.dashboard-weather-box {
-    position: static !important;
-    width: 240px !important;
-    min-width: 240px !important;
-    padding: 18px 22px !important;
-    border-radius: 18px !important;
-    background: rgba(255, 255, 255, 0.12) !important;
-    text-align: center !important;
-    box-shadow: none !important;
-    margin: 0 !important;
-}
-
-.dashboard-weather-box .weather-label {
-    font-size: 13px !important;
-    font-weight: 600 !important;
-    margin-bottom: 8px !important;
-    color: rgba(255, 255, 255, 0.8) !important;
-}
-
-.dashboard-weather-box h2,
-#weatherMood {
-    font-size: 23px !important;
-    font-weight: 800 !important;
-    color: #38bdf8 !important;
-    margin: 0 0 8px 0 !important;
-}
-
-#weatherMiniData {
-    font-size: 15px !important;
-    font-weight: 700 !important;
-    color: #ffffff !important;
-    margin: 0 !important;
-}
-
-/* Device section must appear after dashboard */
-.devices-section {
-    width: 100% !important;
-    margin-top: 0 !important;
-    margin-bottom: 34px !important;
-}
-
-/* Device card grid */
-.device-grid {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 24px !important;
-    margin-bottom: 0 !important;
-}
-
-/* Status and summary boxes under switches */
-.status-grid,
-.summary-grid {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 20px !important;
-    margin-top: 24px !important;
-    margin-bottom: 22px !important;
-}
-
-/* Make all cards equal and aligned */
-.status-card,
-.summary-card,
-.device-card {
-    border-radius: 22px !important;
-    box-sizing: border-box !important;
-}
-
-/* Environment section below status/summary */
-.environment-section {
-    width: 100% !important;
-    display: block !important;
-    clear: both !important;
-    margin-top: 45px !important;
-    margin-bottom: 45px !important;
-    padding-top: 35px !important;
-    border-top: 2px solid rgba(255, 255, 255, 0.35) !important;
-    box-sizing: border-box !important;
-}
-
-/* Full width line fix */
-.environment-section::before {
-    display: none !important;
-}
-
-.environment-grid {
-    width: 100% !important;
-    display: grid !important;
-    grid-template-columns: repeat(4, 1fr) !important;
-    gap: 18px !important;
-}
-
-/* Remove duplicate bottom system status if present */
-.system-info,
-.system-info-grid,
-.system-status-grid,
-.system-status-section {
-    display: none !important;
-}
-
-/* Mobile */
-@media (max-width: 1100px) {
-    .device-grid,
-    .status-grid,
-    .summary-grid,
-    .environment-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
-    }
-
-    .dashboard-plate,
-    .dashboard-section {
-        flex-direction: column !important;
-        align-items: flex-start !important;
-    }
-
-    .dashboard-weather-box {
-        width: 100% !important;
-        min-width: unset !important;
-        text-align: left !important;
-    }
-}
-
-@media (max-width: 650px) {
-    .device-grid,
-    .status-grid,
-    .summary-grid,
-    .environment-grid {
-        grid-template-columns: 1fr !important;
-    }
-
-    .header {
-        flex-direction: column !important;
-        gap: 18px !important;
-        text-align: center !important;
-    }
-}
-
-.environment-card {
-    width: 100% !important;
-    min-height: 150px;
-}
-
 
 /*=========================================================
- MAKE CARD INSIDE LINE FULL WIDTH
+ HISTORY SECTION
 =========================================================*/
 
-.device-card hr,
-.environment-card hr,
-.card-line {
-    width: 100% !important;
+.history {
+    width: 100%;
+    margin-bottom: 38px;
 }
 
-.device-card::after,
-.environment-card::after {
-    width: 100% !important;
+.history-list {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-bottom: 18px;
 }
 
-
-/*=========================================================
- HEADER DATE TIME TEMPERATURE
-=========================================================*/
-
-.header-center-info {
-    text-align: center;
-    display: flex !important;
-    flex-direction: column !important;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-}
-
-.header-date {
-    font-size: 15px;
-    font-weight: 600;
-    color: #ffffff;
-    opacity: 0.9;
-}
-
-.header-time {
-    font-size: 15px;
-    font-weight: 700;
-    color: #ffffff;
-}
-
-.header-temperature {
-    margin-top: 4px;
-    padding: 6px 14px;
+.history-item {
+    width: 100%;
+    min-height: 78px;
+    padding: 18px 20px;
     border-radius: 18px;
-    font-size: 14px;
-    font-weight: 800;
-    color: #ffffff;
-    background: rgba(255, 255, 255, 0.18);
-    display: inline-flex;
+    background: rgba(255, 255, 255, 0.96);
+    color: #111827;
+    display: flex;
     align-items: center;
-    justify-content: center;
-    gap: 6px;
+    gap: 15px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
 }
 
-.top-temperature-box {
+.history-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #6366f1, #4338ca);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.history-item h4 {
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.history-item p {
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.history-item span {
+    margin-left: auto;
+    font-size: 13px;
+    font-weight: 700;
+    color: #4b5563;
+}
+
+/*=========================================================
+ NOTIFICATION
+=========================================================*/
+
+.notification-area {
+    width: 100%;
+    margin: 22px 0;
+}
+
+.notification-card {
+    width: 100%;
+    min-height: 82px;
+    padding: 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.14);
+}
+
+.notification-card > i {
+    width: 52px;
+    height: 52px;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+}
+
+.notification-card h3 {
+    font-size: 18px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.notification-card p {
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/*=========================================================
+ QUICK SYSTEM GRID
+=========================================================*/
+
+.quick-system-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 18px;
+    margin-top: 22px;
+}
+
+.quick-card {
+    min-height: 95px;
+    padding: 18px 20px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.96);
+    color: #111827;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.quick-card > i {
+    width: 48px;
+    height: 48px;
+    border-radius: 15px;
+    background: linear-gradient(135deg, #14b8a6, #0f766e);
+    color: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.quick-card h4 {
+    font-size: 15px;
+    font-weight: 800;
+    margin-bottom: 4px;
+}
+
+.quick-card p {
+    font-size: 14px;
+    color: #6b7280;
+    font-weight: 600;
+}
+
+/*=========================================================
+ FOOTER
+=========================================================*/
+
+.main-footer {
+    width: 100%;
+    padding: 26px 20px;
+    margin-top: 35px;
+    text-align: center;
+    background: rgba(255, 255, 255, 0.08);
+    border-top: 1px solid rgba(255, 255, 255, 0.13);
+}
+
+.main-footer h3 {
+    font-size: 20px;
+    font-weight: 800;
+    margin-bottom: 8px;
+}
+
+.main-footer p {
+    font-size: 14px;
+    opacity: 0.85;
+    margin-bottom: 4px;
+}
+
+/*=========================================================
+ REMOVE OLD LOADER IF PRESENT
+=========================================================*/
+
+.loader,
+#loader {
     display: none !important;
 }
 
-
 /*=========================================================
- RESPONSIVE
+ MOBILE / TABLET RESPONSIVE
 =========================================================*/
 
-@media (max-width: 1100px) {
-    .environment-grid {
-        grid-template-columns: repeat(2, 1fr) !important;
+@media (max-width: 1150px) {
+
+    .device-grid,
+    .status-grid,
+    .summary,
+    .environment-grid,
+    .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
     }
 
     .dashboard-plate {
@@ -1950,131 +879,87 @@ padding:18px;
 
     .dashboard-weather-box {
         width: 100%;
+        min-width: unset;
         text-align: left;
     }
+
 }
 
-@media (max-width: 650px) {
-    .environment-grid {
-        grid-template-columns: 1fr !important;
+@media (max-width: 760px) {
+
+    .main-header {
+        flex-direction: column;
+        gap: 18px;
+        padding: 24px 18px;
+        text-align: center;
     }
 
-    .header-center-info {
-        margin-top: 10px;
+    .header-left {
+        flex-direction: column;
+        gap: 10px;
     }
+
+    .main-content {
+        padding: 22px 14px 35px;
+    }
+
+    .dashboard-plate {
+        padding: 26px 20px;
+    }
+
+    .dashboard-left h1 {
+        font-size: 30px;
+    }
+
+    .section-heading h2 {
+        font-size: 22px;
+    }
+
+    .device-grid,
+    .status-grid,
+    .summary,
+    .environment-grid,
+    .stats-grid,
+    .quick-system-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .device-card,
+    .status-card,
+    .summary-card,
+    .environment-card,
+    .stats-card,
+    .notification-card,
+    .quick-card {
+        width: 100%;
+    }
+
+    .history-item {
+        align-items: flex-start;
+    }
+
+    .history-item span {
+        margin-left: 0;
+    }
+
 }
 
-/*=========================================================
- FINAL PAGE ORDER FIX
-=========================================================*/
+@media (max-width: 430px) {
 
-/* Make main page sections follow our custom order */
-.container {
-    display: flex !important;
-    flex-direction: column !important;
-}
+    .logo-text h1 {
+        font-size: 26px;
+    }
 
-/* 1. Header */
-.header {
-    order: 1 !important;
-}
+    .header-time {
+        font-size: 16px;
+    }
 
-/* 2. Dashboard plate */
-.dashboard-section,
-.dashboard-plate {
-    order: 2 !important;
-}
+    .device-body h2 {
+        font-size: 26px;
+    }
 
-/* 3. Device switches */
-.devices-section,
-.device-section {
-    order: 3 !important;
-}
+    .summary-card h1 {
+        font-size: 30px;
+    }
 
-/* 4. DHT11 / weather sensor section */
-.environment-section {
-    order: 4 !important;
-}
-
-/* 5. WiFi / Firebase / ESP32 / Last Update cards */
-.status-grid,
-.status-cards,
-.connection-grid {
-    order: 5 !important;
-}
-
-/* 6. Devices / Running / Operations / Runtime cards */
-.summary-grid,
-.summary-cards {
-    order: 6 !important;
-}
-
-/* 7. Statistics */
-.statistics-section,
-.stats-section {
-    order: 7 !important;
-}
-
-/* 8. History */
-.history-section {
-    order: 8 !important;
-}
-/*=========================================================
- HIDE DUPLICATE STATUS SECTION
- This hides the second ESP32 Status / Firebase Status / WiFi Status row
-=========================================================*/
-
-.system-info,
-.system-info-grid,
-.system-status-grid,
-.system-status-section {
-    display: none !important;
-}
-
-/*=========================================================
- DASHBOARD PLATE WEATHER POSITION FIX
-=========================================================*/
-
-.dashboard-plate,
-.dashboard-section {
-    width: 100% !important;
-    display: flex !important;
-    align-items: center !important;
-    justify-content: space-between !important;
-    gap: 20px !important;
-}
-
-.dashboard-left {
-    flex: 1 !important;
-}
-
-.dashboard-weather-box {
-    position: static !important;
-    margin-left: auto !important;
-    min-width: 230px !important;
-    max-width: 280px !important;
-    padding: 16px 20px !important;
-    border-radius: 18px !important;
-    background: rgba(255, 255, 255, 0.12) !important;
-    text-align: right !important;
-}
-
-/*=========================================================
- FULL WIDTH SEPARATOR LINE BEFORE ENVIRONMENT
-=========================================================*/
-
-.environment-section {
-    width: 100% !important;
-    max-width: 100% !important;
-    border-top: 2px solid rgba(255, 255, 255, 0.35) !important;
-    padding-top: 35px !important;
-    margin-top: 45px !important;
-}
-
-.environment-section::before {
-    display: none !important;
-}
-
-.environment-grid {
-    width: 100% !important;
 }
