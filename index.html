@@ -2,876 +2,646 @@
 <html lang="en">
 
 <head>
-<link rel="icon" href="data:,">
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Smart Home Automation V2</title>
+    <link rel="icon" href="data:,">
 
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <title>Smart Home Automation V2</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
+
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
 
 </head>
 
 <body>
 
-<div class="loader" id="loader">
+<!-- =====================================================
+ FULL PAGE WRAPPER
+===================================================== -->
 
-    <div class="spinner"></div>
+<div class="app">
 
-    <h2>Connecting Smart Home...</h2>
 
-</div>
+<!-- =====================================================
+ TOP HEADER
+ NO CURVED CORNER
+ FULL WIDTH BOX
+===================================================== -->
 
-<div class="container">
+<header class="main-header">
 
-<!-- ===================== NAVIGATION ===================== -->
+    <div class="header-left">
 
-<header>
+        <div class="logo-icon">
+            <i class="fa-solid fa-house-signal"></i>
+        </div>
 
-<div class="logo">
+        <div class="logo-text">
+            <h1>Smart Home</h1>
+            <p>ESP32 Home Automation</p>
+        </div>
 
-<i class="fa-solid fa-house-signal"></i>
-
-<h1>Smart Home</h1>
-
-</div>
-
-<div class="datetime">
-
-<p id="date">Loading Date...</p>
-
-<p id="time">Loading Time...</p>
- <div class="header-temperature">
-        🌡 <span id="topTemperatureValue">-- °C</span>
     </div>
-</div>
 
 
+    <div class="header-right">
 
-</div>
+        <div class="date-time-box">
+
+            <p id="date" class="header-date">Loading Date...</p>
+
+            <p id="time" class="header-time">Loading Time...</p>
+
+            <div class="header-temperature">
+                🌡 <span id="topTemperatureValue">-- °C</span>
+            </div>
+
+        </div>
+
+    </div>
+
 </header>
 
-<!-- ===================== DASHBOARD TITLE ===================== -->
 
-<!-- Dashboard Plate -->
+<!-- =====================================================
+ MAIN CONTENT AREA
+===================================================== -->
+
+<main class="main-content">
+
+
+<!-- =====================================================
+ DASHBOARD PLATE
+ FULL WIDTH BOX
+ WEATHER INSIDE RIGHT SIDE
+===================================================== -->
+
 <section class="dashboard-section dashboard-plate">
 
     <div class="dashboard-left">
+
         <h1>Dashboard</h1>
-        <p>Real-Time Smart Home Automation using ESP32 + Firebase</p>
+
+        <p>
+            Real-Time Smart Home Automation using ESP32 + Firebase
+        </p>
+
     </div>
+
 
     <div class="dashboard-weather-box">
-        <div class="weather-label">Kongalnagaram Weather</div>
-        <div id="weatherMood" class="weather-mood">Checking...</div>
-        <div id="weatherMiniData" class="weather-mini-data">-- °C | -- %</div>
+
+        <p class="weather-label">
+            Kongalnagaram Weather
+        </p>
+
+        <h2 id="weatherMood">
+            Checking...
+        </h2>
+
+        <p id="weatherMiniData">
+            -- °C | -- %
+        </p>
+
     </div>
 
 </section>
 
-<!-- ===================== CONNECTION STATUS ===================== -->
+<!DOCTYPE html>
+<html lang="en">
 
-<section class="status-grid">
+<head>
 
-<div class="status-card">
+    <link rel="icon" href="data:,">
 
-<div class="icon wifi">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<i class="fa-solid fa-wifi"></i>
+    <title>Smart Home Automation V2</title>
 
-</div>
+    <!-- Google Font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-<div>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
 
-<h3>WiFi</h3>
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css">
 
-<p id="wifiStatus">Connecting...</p>
+    <!-- Main CSS -->
+    <link rel="stylesheet" href="style.css">
 
-</div>
+</head>
 
-</div>
+<body>
 
-<div class="status-card">
+<!-- =====================================================
+ FULL PAGE WRAPPER
+===================================================== -->
 
-<div class="icon firebase">
+<div class="app">
 
-<i class="fa-solid fa-fire"></i>
 
-</div>
+<!-- =====================================================
+ TOP HEADER
+ NO CURVED CORNER
+ FULL WIDTH BOX
+===================================================== -->
 
-<div>
+<header class="main-header">
 
-<h3>Firebase</h3>
+    <div class="header-left">
 
-<p id="firebaseStatus">Connecting...</p>
+        <div class="logo-icon">
+            <i class="fa-solid fa-house-signal"></i>
+        </div>
 
-</div>
+        <div class="logo-text">
+            <h1>Smart Home</h1>
+            <p>ESP32 Home Automation</p>
+        </div>
 
-</div>
+    </div>
 
-<div class="status-card">
 
-<div class="icon esp">
+    <div class="header-right">
 
-<i class="fa-solid fa-microchip"></i>
+        <div class="date-time-box">
 
-</div>
+            <p id="date" class="header-date">Loading Date...</p>
 
-<div>
+            <p id="time" class="header-time">Loading Time...</p>
 
-<h3>ESP32</h3>
+            <div class="header-temperature">
+                🌡 <span id="topTemperatureValue">-- °C</span>
+            </div>
 
-<p id="espStatus">Offline</p>
+        </div>
 
-</div>
+    </div>
 
-</div>
+</header>
 
-<div class="status-card">
 
-<div class="icon update">
+<!-- =====================================================
+ MAIN CONTENT AREA
+===================================================== -->
 
-<i class="fa-solid fa-clock"></i>
+<main class="main-content">
 
-</div>
 
-<div>
+<!-- =====================================================
+ DASHBOARD PLATE
+ FULL WIDTH BOX
+ WEATHER INSIDE RIGHT SIDE
+===================================================== -->
 
-<h3>Last Update</h3>
+<section class="dashboard-section dashboard-plate">
 
-<p id="lastUpdate">--:--:--</p>
+    <div class="dashboard-left">
 
-</div>
+        <h1>Dashboard</h1>
 
-</div>
+        <p>
+            Real-Time Smart Home Automation using ESP32 + Firebase
+        </p>
+
+    </div>
+
+
+    <div class="dashboard-weather-box">
+
+        <p class="weather-label">
+            Kongalnagaram Weather
+        </p>
+
+        <h2 id="weatherMood">
+            Checking...
+        </h2>
+
+        <p id="weatherMiniData">
+            -- °C | -- %
+        </p>
+
+    </div>
 
 </section>
+<!-- =====================================================
+ ENVIRONMENT MONITORING SECTION
+ DHT11 + ONLINE WEATHER FALLBACK
+===================================================== -->
 
-<!-- ===================== SUMMARY ===================== -->
-
-<section class="summary">
-
-<div class="summary-card">
-
-<h3>
-
-<i class="fa-solid fa-lightbulb"></i>
-
-Devices
-
-</h3>
-
-<h1>4</h1>
-
-</div>
-
-<div class="summary-card">
-
-<h3>
-
-<i class="fa-solid fa-toggle-on"></i>
-
-Running
-
-</h3>
-
-<h1 id="runningCount">0</h1>
-
-</div>
-
-<div class="summary-card">
-
-<h3>
-
-<i class="fa-solid fa-bolt"></i>
-
-Operations Today
-
-</h3>
-
-<h1 id="operationCount">0</h1>
-
-</div>
-
-<div class="summary-card">
-
-<h3>
-
-<i class="fa-solid fa-calendar-day"></i>
-
-Today's Runtime
-
-</h3>
-
-<h1 id="todayRuntime">0 Min</h1>
-
-</div>
-
-</section>
-
-<!-- ===================== DEVICE SECTION ===================== -->
-
-<section class="device-section">
-
-<h2>
-
-<i class="fa-solid fa-sliders"></i>
-
-Device Control
-
-</h2>
-
-<div class="device-grid">
-
-<!--
-
-PART 1B STARTS HERE
-
-Fan Card
-
-Light 1 Card
-
-Socket Card
-
-Light 2 Card
-
--->
-<!-- ===================== FAN ===================== -->
-
-<div class="device-card" id="fanCard">
-
-    <div class="device-header">
-
-        <div class="device-icon fan">
-
-            <i class="fa-solid fa-fan"></i>
-
-        </div>
-
-        <div>
-
-            <h3>Fan</h3>
-
-            <p id="fanSource">Last: Web</p>
-
-        </div>
-
-    </div>
-
-    <div class="device-body">
-
-        <h2 id="fanState">OFF</h2>
-
-        <label class="switch">
-
-            <input type="checkbox" id="fanSwitch">
-
-            <span class="slider"></span>
-
-        </label>
-
-    </div>
-
-    <div class="device-footer">
-
-        <span>
-
-            <i class="fa-solid fa-clock"></i>
-
-            <span id="fanTime">--:--</span>
-
-        </span>
-
-    </div>
-
-</div>
-
-<!-- ===================== LIGHT 1 ===================== -->
-
-<div class="device-card" id="light1Card">
-
-    <div class="device-header">
-
-        <div class="device-icon light">
-
-            <i class="fa-solid fa-lightbulb"></i>
-
-        </div>
-
-        <div>
-
-            <h3>Light 1</h3>
-
-            <p id="light1Source">Last: Web</p>
-
-        </div>
-
-    </div>
-
-    <div class="device-body">
-
-        <h2 id="light1State">OFF</h2>
-
-        <label class="switch">
-
-            <input type="checkbox" id="light1Switch">
-
-            <span class="slider"></span>
-
-        </label>
-
-    </div>
-
-    <div class="device-footer">
-
-        <span>
-
-            <i class="fa-solid fa-clock"></i>
-
-            <span id="light1Time">--:--</span>
-
-        </span>
-
-    </div>
-
-</div>
-
-<!-- ===================== SOCKET ===================== -->
-
-<div class="device-card" id="socketCard">
-
-    <div class="device-header">
-
-        <div class="device-icon socket">
-
-            <i class="fa-solid fa-plug-circle-bolt"></i>
-
-        </div>
-
-        <div>
-
-            <h3>Socket</h3>
-
-            <p id="socketSource">Last: Web</p>
-
-        </div>
-
-    </div>
-
-    <div class="device-body">
-
-        <h2 id="socketState">OFF</h2>
-
-        <label class="switch">
-
-            <input type="checkbox" id="socketSwitch">
-
-            <span class="slider"></span>
-
-        </label>
-
-    </div>
-
-    <div class="device-footer">
-
-        <span>
-
-            <i class="fa-solid fa-clock"></i>
-
-            <span id="socketTime">--:--</span>
-
-        </span>
-
-    </div>
-
-</div>
-
-<!-- ===================== LIGHT 2 ===================== -->
-
-<div class="device-card" id="light2Card">
-
-    <div class="device-header">
-
-        <div class="device-icon light">
-
-            <i class="fa-solid fa-lightbulb"></i>
-
-        </div>
-
-        <div>
-
-            <h3>Light 2</h3>
-
-            <p id="light2Source">Last: Web</p>
-
-        </div>
-
-    </div>
-
-    <div class="device-body">
-
-        <h2 id="light2State">OFF</h2>
-
-        <label class="switch">
-
-            <input type="checkbox" id="light2Switch">
-
-            <span class="slider"></span>
-
-        </label>
-
-    </div>
-
-    <div class="device-footer">
-
-        <span>
-
-            <i class="fa-solid fa-clock"></i>
-
-            <span id="light2Time">--:--</span>
-
-        </span>
-
-    </div>
-
-</div>
-<!-- Environment Sensor Section -->
 <section class="environment-section">
 
-    <div class="section-title">
-        <h2>🌡 Environment Monitoring</h2>
-        <p>Live temperature and humidity data from DHT11 sensor</p>
+    <div class="section-heading">
+
+        <h2>
+            <i class="fa-solid fa-temperature-half"></i>
+            Environment Monitoring
+        </h2>
+
+        <p>
+            Live DHT11 sensor data. If DHT11 is offline, Kongalnagaram online weather is shown.
+        </p>
+
     </div>
+
 
     <div class="environment-grid">
 
-        <!-- Temperature Card -->
+
+        <!-- ===================== TEMPERATURE ===================== -->
+
         <div class="environment-card temperature-card">
-            <div class="environment-icon">🌡</div>
+
+            <div class="environment-icon">
+                <i class="fa-solid fa-temperature-half"></i>
+            </div>
 
             <div class="environment-info">
+
                 <h3>Temperature</h3>
+
                 <h1 id="temperatureValue">-- °C</h1>
+
                 <p id="temperatureStatus">Waiting for sensor...</p>
+
             </div>
+
         </div>
 
-        <!-- Humidity Card -->
+
+        <!-- ===================== HUMIDITY ===================== -->
+
         <div class="environment-card humidity-card">
-            <div class="environment-icon">💧</div>
+
+            <div class="environment-icon">
+                <i class="fa-solid fa-droplet"></i>
+            </div>
 
             <div class="environment-info">
+
                 <h3>Humidity</h3>
+
                 <h1 id="humidityValue">-- %</h1>
+
                 <p id="humidityStatus">Waiting for sensor...</p>
+
             </div>
+
         </div>
 
-        <!-- Heat Index Card -->
+
+        <!-- ===================== FEELS LIKE ===================== -->
+
         <div class="environment-card heat-card">
-            <div class="environment-icon">🔥</div>
+
+            <div class="environment-icon">
+                <i class="fa-solid fa-fire"></i>
+            </div>
 
             <div class="environment-info">
-                <h3>Heat Index</h3>
+
+                <h3>Feels Like</h3>
+
                 <h1 id="heatIndexValue">-- °C</h1>
-                <p>Feels like temperature</p>
+
+                <p id="heatIndexStatus">Apparent temperature</p>
+
             </div>
+
         </div>
 
-        <!-- Sensor Status Card -->
+
+        <!-- ===================== SENSOR STATUS ===================== -->
+
         <div class="environment-card sensor-card">
-            <div class="environment-icon">📡</div>
+
+            <div class="environment-icon">
+                <i class="fa-solid fa-satellite-dish"></i>
+            </div>
 
             <div class="environment-info">
-                <h3>DHT11 Sensor</h3>
+
+                <h3>Data Source</h3>
+
                 <h1 id="sensorStatus">Offline</h1>
+
                 <p id="sensorLastUpdated">Last updated: --</p>
+
             </div>
+
         </div>
+
 
     </div>
 
 </section>
-</div>
 
-</section>
 
-<!-- ===================== STATISTICS ===================== -->
+<!-- =====================================================
+ STATISTICS SECTION
+===================================================== -->
 
 <section class="statistics">
 
-<h2>
+    <div class="section-heading">
 
-<i class="fa-solid fa-chart-column"></i>
+        <h2>
+            <i class="fa-solid fa-chart-column"></i>
+            Statistics
+        </h2>
 
-Statistics
-
-</h2>
-<!-- ===================== STATISTICS GRID ===================== -->
-
-<div class="stats-grid">
-
-    <!-- FAN -->
-
-    <div class="stats-card">
-
-        <h3>
-            <i class="fa-solid fa-fan"></i>
-            Fan
-        </h3>
-
-        <p>Today's Runtime</p>
-        <h2 id="fanRuntime">0 Min</h2>
-
-        <hr>
-
-        <p>Today's ON Count</p>
-        <h2 id="fanCount">0</h2>
-
-        <hr>
-
-        <p>Switch Operations</p>
-        <h2 id="fanSwitchCount">0</h2>
-
-        <hr>
-
-        <p>Web Operations</p>
-        <h2 id="fanWebCount">0</h2>
-
-        <div class="progress">
-
-            <div class="progress-value" id="fanProgress"></div>
-
-        </div>
+        <p>
+            Device runtime and operation counts
+        </p>
 
     </div>
 
-    <!-- LIGHT 1 -->
 
-    <div class="stats-card">
+    <div class="stats-grid">
 
-        <h3>
-            <i class="fa-solid fa-lightbulb"></i>
-            Light 1
-        </h3>
 
-        <p>Today's Runtime</p>
-        <h2 id="light1Runtime">0 Min</h2>
+        <!-- ===================== FAN STATS ===================== -->
 
-        <hr>
+        <div class="stats-card">
 
-        <p>Today's ON Count</p>
-        <h2 id="light1Count">0</h2>
+            <h3>
+                <i class="fa-solid fa-fan"></i>
+                Fan
+            </h3>
 
-        <hr>
+            <p>Today's Runtime</p>
+            <h2 id="fanRuntime">0 Min</h2>
 
-        <p>Switch Operations</p>
-        <h2 id="light1SwitchCount">0</h2>
+            <hr>
 
-        <hr>
+            <p>Today's ON Count</p>
+            <h2 id="fanCount">0</h2>
 
-        <p>Web Operations</p>
-        <h2 id="light1WebCount">0</h2>
+            <hr>
 
-        <div class="progress">
+            <p>Switch Operations</p>
+            <h2 id="fanSwitchCount">0</h2>
 
-            <div class="progress-value" id="light1Progress"></div>
+            <hr>
 
-        </div>
+            <p>Web Operations</p>
+            <h2 id="fanWebCount">0</h2>
 
-    </div>
-
-    <!-- SOCKET -->
-
-    <div class="stats-card">
-
-        <h3>
-            <i class="fa-solid fa-plug-circle-bolt"></i>
-            Socket
-        </h3>
-
-        <p>Today's Runtime</p>
-        <h2 id="socketRuntime">0 Min</h2>
-
-        <hr>
-
-        <p>Today's ON Count</p>
-        <h2 id="socketCount">0</h2>
-
-        <hr>
-
-        <p>Switch Operations</p>
-        <h2 id="socketSwitchCount">0</h2>
-
-        <hr>
-
-        <p>Web Operations</p>
-        <h2 id="socketWebCount">0</h2>
-
-        <div class="progress">
-
-            <div class="progress-value" id="socketProgress"></div>
+            <div class="progress">
+                <div class="progress-value" id="fanProgress"></div>
+            </div>
 
         </div>
 
-    </div>
 
-    <!-- LIGHT 2 -->
+        <!-- ===================== LIGHT 1 STATS ===================== -->
 
-    <div class="stats-card">
+        <div class="stats-card">
 
-        <h3>
-            <i class="fa-solid fa-lightbulb"></i>
-            Light 2
-        </h3>
+            <h3>
+                <i class="fa-solid fa-lightbulb"></i>
+                Light 1
+            </h3>
 
-        <p>Today's Runtime</p>
-        <h2 id="light2Runtime">0 Min</h2>
+            <p>Today's Runtime</p>
+            <h2 id="light1Runtime">0 Min</h2>
 
-        <hr>
+            <hr>
 
-        <p>Today's ON Count</p>
-        <h2 id="light2Count">0</h2>
+            <p>Today's ON Count</p>
+            <h2 id="light1Count">0</h2>
 
-        <hr>
+            <hr>
 
-        <p>Switch Operations</p>
-        <h2 id="light2SwitchCount">0</h2>
+            <p>Switch Operations</p>
+            <h2 id="light1SwitchCount">0</h2>
 
-        <hr>
+            <hr>
 
-        <p>Web Operations</p>
-        <h2 id="light2WebCount">0</h2>
+            <p>Web Operations</p>
+            <h2 id="light1WebCount">0</h2>
 
-        <div class="progress">
-
-            <div class="progress-value" id="light2Progress"></div>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ===================== SYSTEM INFORMATION ===================== -->
-
-<div class="system-info">
-
-    <div class="info-card">
-
-        <i class="fa-solid fa-microchip"></i>
-
-        <div>
-
-            <h4>ESP32 Status</h4>
-
-            <p id="espInfo">Waiting...</p>
+            <div class="progress">
+                <div class="progress-value" id="light1Progress"></div>
+            </div>
 
         </div>
 
-    </div>
 
-    <div class="info-card">
+        <!-- ===================== SOCKET STATS ===================== -->
 
-        <i class="fa-solid fa-fire"></i>
+        <div class="stats-card">
 
-        <div>
+            <h3>
+                <i class="fa-solid fa-plug-circle-bolt"></i>
+                Socket
+            </h3>
 
-            <h4>Firebase Status</h4>
+            <p>Today's Runtime</p>
+            <h2 id="socketRuntime">0 Min</h2>
 
-            <p id="firebaseInfo">Waiting...</p>
+            <hr>
+
+            <p>Today's ON Count</p>
+            <h2 id="socketCount">0</h2>
+
+            <hr>
+
+            <p>Switch Operations</p>
+            <h2 id="socketSwitchCount">0</h2>
+
+            <hr>
+
+            <p>Web Operations</p>
+            <h2 id="socketWebCount">0</h2>
+
+            <div class="progress">
+                <div class="progress-value" id="socketProgress"></div>
+            </div>
 
         </div>
 
-    </div>
 
-    <div class="info-card">
+        <!-- ===================== LIGHT 2 STATS ===================== -->
 
-        <i class="fa-solid fa-wifi"></i>
+        <div class="stats-card">
 
-        <div>
+            <h3>
+                <i class="fa-solid fa-lightbulb"></i>
+                Light 2
+            </h3>
 
-            <h4>WiFi Status</h4>
+            <p>Today's Runtime</p>
+            <h2 id="light2Runtime">0 Min</h2>
 
-            <p id="wifiInfo">Waiting...</p>
+            <hr>
+
+            <p>Today's ON Count</p>
+            <h2 id="light2Count">0</h2>
+
+            <hr>
+
+            <p>Switch Operations</p>
+            <h2 id="light2SwitchCount">0</h2>
+
+            <hr>
+
+            <p>Web Operations</p>
+            <h2 id="light2WebCount">0</h2>
+
+            <div class="progress">
+                <div class="progress-value" id="light2Progress"></div>
+            </div>
 
         </div>
 
-    </div>
 
-</div>
+    </div>
 
 </section>
 
-<!-- ===================== HISTORY ===================== -->
+
+<!-- =====================================================
+ ACTIVITY HISTORY SECTION
+===================================================== -->
 
 <section class="history">
 
-<h2>
+    <div class="section-heading">
 
-<i class="fa-solid fa-clock-rotate-left"></i>
+        <h2>
+            <i class="fa-solid fa-clock-rotate-left"></i>
+            Activity History
+        </h2>
 
-Activity History
-
-</h2>
-
-<!-- ===================== ACTIVITY HISTORY ===================== -->
-
-<div class="history-list" id="historyList">
-
-    <div class="history-item">
-
-        <div class="history-icon">
-
-            <i class="fa-solid fa-power-off"></i>
-
-        </div>
-
-        <div>
-
-            <h4>Smart Home Started</h4>
-
-            <p id="systemStartMessage">
-                Waiting for first activity...
-            </p>
-
-        </div>
-
-        <span id="systemStartTime">--:--</span>
+        <p>
+            Latest smart home activity and notifications
+        </p>
 
     </div>
 
-</div>
 
-<!-- ===================== LIVE EVENT LOG ===================== -->
+    <div class="history-list" id="historyList">
 
-<div class="history-list" id="eventLog">
+        <div class="history-item">
 
-</div>
+            <div class="history-icon">
+                <i class="fa-solid fa-power-off"></i>
+            </div>
 
-<!-- ===================== NOTIFICATIONS ===================== -->
+            <div>
+                <h4>Smart Home Started</h4>
+                <p id="systemStartMessage">Waiting for first activity...</p>
+            </div>
 
-<div class="notification-area">
-
-    <div class="notification-card">
-
-        <i class="fa-solid fa-bell"></i>
-
-        <div>
-
-            <h3>Notifications</h3>
-
-            <p id="notificationText">
-
-                No notifications available.
-
-            </p>
+            <span id="systemStartTime">--:--</span>
 
         </div>
 
     </div>
 
-</div>
 
-<!-- ===================== QUICK SYSTEM STATUS ===================== -->
+    <div class="history-list" id="eventLog">
 
-<div class="system-info">
+    </div>
 
-    <div class="info-card">
 
-        <i class="fa-solid fa-clock"></i>
+    <div class="notification-area">
 
-        <div>
+        <div class="notification-card">
 
-            <h4>Last Update</h4>
+            <i class="fa-solid fa-bell"></i>
 
-            <p id="lastUpdateTime">--:--</p>
+            <div>
+                <h3>Notifications</h3>
+                <p id="notificationText">No notifications available.</p>
+            </div>
 
         </div>
 
     </div>
 
-    <div class="info-card">
 
-        <i class="fa-solid fa-bolt"></i>
+    <div class="quick-system-grid">
 
-        <div>
+        <div class="quick-card">
 
-            <h4>Total Operations</h4>
+            <i class="fa-solid fa-clock"></i>
 
-            <p id="totalOperations">0</p>
+            <div>
+                <h4>Last Update</h4>
+                <p id="lastUpdateTime">--:--</p>
+            </div>
+
+        </div>
+
+
+        <div class="quick-card">
+
+            <i class="fa-solid fa-bolt"></i>
+
+            <div>
+                <h4>Total Operations</h4>
+                <p id="totalOperations">0</p>
+            </div>
+
+        </div>
+
+
+        <div class="quick-card">
+
+            <i class="fa-solid fa-house-signal"></i>
+
+            <div>
+                <h4>System Mode</h4>
+                <p id="systemMode">Normal Operation</p>
+            </div>
 
         </div>
 
     </div>
-
-    <div class="info-card">
-
-        <i class="fa-solid fa-house-signal"></i>
-
-        <div>
-
-            <h4>System Mode</h4>
-
-            <p id="systemMode">
-
-                Normal Operation
-
-            </p>
-
-        </div>
-
-    </div>
-
-</div>
-
-<!-- ===================== FOOTER ===================== -->
-
-<footer>
-
-    <h3>Smart Home Automation V2</h3>
-
-    <p>
-
-        ESP32 • Firebase • GitHub Pages
-
-    </p>
-
-    <p>
-
-        Developed by Arunkumar
-
-    </p>
-
-</footer>
 
 </section>
 
-<footer>
 
-<p>
+<!-- =====================================================
+ FOOTER
+===================================================== -->
 
-Developed by <strong>Arunkumar</strong>
+<footer class="main-footer">
 
-</p>
+    <h3>Smart Home Automation V2</h3>
 
-<p>
+    <p>ESP32 • Firebase • GitHub Pages • DHT11 • Google Home Ready • Alexa Ready</p>
 
-Smart Home Automation V2
-
-</p>
+    <p>Developed by <strong>Arunkumar</strong></p>
 
 </footer>
 
+
+</main>
+
 </div>
+
+
+<!-- =====================================================
+ FIREBASE SDK
+===================================================== -->
 
 <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
 
@@ -882,5 +652,3 @@ Smart Home Automation V2
 </body>
 
 </html>
-
-
