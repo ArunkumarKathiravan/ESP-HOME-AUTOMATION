@@ -1367,3 +1367,93 @@ body {
         width: 100%;
     }
 }
+
+
+/*=========================================================
+ EMAIL VERIFY + FACE DEMO LOGIN PATCH
+=========================================================*/
+
+.verify-icon {
+    width: 70px;
+    height: 70px;
+
+    margin: 0 auto 15px;
+
+    border-radius: 22px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 34px;
+    color: #38bdf8;
+
+    background: rgba(56, 189, 248, 0.12);
+    box-shadow: 0 0 28px rgba(56, 189, 248, 0.25);
+}
+
+.verify-text {
+    font-size: 14px;
+    color: #d1d5db;
+    line-height: 1.6;
+}
+
+.verify-text strong {
+    color: #38bdf8;
+}
+
+.verify-small {
+    font-size: 13px;
+    color: #a3adbd;
+    line-height: 1.5;
+}
+
+.secondary-auth-btn {
+    background: rgba(255, 255, 255, 0.12) !important;
+    border: 1px solid rgba(255, 255, 255, 0.18) !important;
+}
+
+.face-demo-box {
+    margin-top: 4px;
+}
+
+.face-btn {
+    width: 100%;
+    height: 48px;
+
+    border: 1px solid rgba(56, 189, 248, 0.35);
+    border-radius: 16px;
+
+    cursor: pointer;
+
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: 800;
+
+    color: #ffffff;
+    background: rgba(56, 189, 248, 0.14);
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+
+    transition: 0.25s ease;
+}
+
+.face-btn:hover {
+    background: rgba(56, 189, 248, 0.28);
+    transform: translateY(-3px);
+}
+
+#faceVideo {
+    width: 100%;
+    height: 210px;
+
+    border-radius: 18px;
+
+    object-fit: cover;
+
+    background: #111827;
+    border: 1px solid #475569;
+}
