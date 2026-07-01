@@ -1444,3 +1444,49 @@ padding:18px;
         font-size: 25px;
     }
 }
+
+/*=========================================================
+ MOVE DHT11 SENSOR SECTION BELOW DEVICE CARDS
+=========================================================*/
+
+.environment-section {
+    width: 100%;
+    display: block;
+    clear: both;
+    margin-top: 45px;
+    padding-top: 30px;
+    border-top: 2px solid rgba(255, 255, 255, 0.35);
+}
+
+/* Make sensor cards stay in one full row below devices */
+.environment-grid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 18px;
+}
+
+/* Force the environment section to start on a new line */
+.device-section,
+.devices-section,
+.device-grid {
+    margin-bottom: 35px;
+}
+
+/* Better spacing for environment title */
+.environment-section .section-title {
+    margin-bottom: 18px;
+}
+
+/* Mobile responsive */
+@media (max-width: 1100px) {
+    .environment-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 650px) {
+    .environment-grid {
+        grid-template-columns: 1fr;
+    }
+}
