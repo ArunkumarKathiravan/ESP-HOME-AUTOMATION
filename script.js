@@ -881,3 +881,208 @@ console.log("Realtime Sync Enabled");
 console.log("Waiting for ESP32...");
 
 console.log("====================================");
+
+
+/*=========================================================
+ SMART HOME AUTOMATION V2
+ SCRIPT.JS
+ PART E
+ FINAL INITIALIZATION & OPTIMIZATION
+ Developed for Arunkumar
+=========================================================*/
+
+/*=========================================================
+ PROJECT SETTINGS
+=========================================================*/
+
+const APP = {
+
+    version: "2.0.0",
+
+    developer: "Arunkumar",
+
+    simulation: true,
+
+    autoReconnect: true,
+
+    refreshRate: 200,
+
+    heartbeatInterval: 5000
+
+};
+
+/*=========================================================
+ PERFORMANCE
+=========================================================*/
+
+let refreshTimer = null;
+
+function startRealtimeEngine(){
+
+    if(refreshTimer!=null){
+
+        clearInterval(refreshTimer);
+
+    }
+
+    refreshTimer = setInterval(()=>{
+
+        calculateRunningDevices();
+
+    },APP.refreshRate);
+
+}
+
+/*=========================================================
+ MEMORY CLEANUP
+=========================================================*/
+
+window.addEventListener("beforeunload",()=>{
+
+    console.log("Closing Smart Home Dashboard...");
+
+    if(refreshTimer!=null){
+
+        clearInterval(refreshTimer);
+
+    }
+
+});
+
+/*=========================================================
+ ERROR LOGGER
+=========================================================*/
+
+window.onerror=function(message,source,line,column,error){
+
+    console.log("========== ERROR ==========");
+
+    console.log(message);
+
+    console.log(source);
+
+    console.log(line);
+
+    console.log(column);
+
+    console.log(error);
+
+    console.log("===========================");
+
+};
+
+/*=========================================================
+ DATABASE CHECK
+=========================================================*/
+
+function verifyDatabase(){
+
+    rootRef.once("value")
+
+    .then(()=>{
+
+        console.log("Database OK");
+
+    })
+
+    .catch((err)=>{
+
+        console.log(err);
+
+        showNotification("Database Error");
+
+    });
+
+}
+
+/*=========================================================
+ INITIALIZE DASHBOARD
+=========================================================*/
+
+function initializeDashboard(){
+
+    console.log("Initializing Dashboard...");
+
+    verifyDatabase();
+
+    startRealtimeEngine();
+
+    runningCount.innerHTML="0";
+
+    operationCount.innerHTML="0";
+
+    firebaseStatus.innerHTML="Checking...";
+
+    espStatus.innerHTML="Waiting...";
+
+    wifiStatus.innerHTML="Waiting...";
+
+}
+
+/*=========================================================
+ SIMULATION MODE
+=========================================================*/
+
+if(APP.simulation){
+
+    console.log("Simulation Mode Enabled");
+
+    systemRef.update({
+
+        espOnline:true,
+
+        firmwareVersion:"Simulation",
+
+        wifiRSSI:-48,
+
+        uptime:0,
+
+        lastSeen:Date.now()
+
+    });
+
+}
+
+/*=========================================================
+ WEBSITE HEARTBEAT
+=========================================================*/
+
+setInterval(()=>{
+
+    if(APP.simulation){
+
+        systemRef.update({
+
+            lastSeen:Date.now(),
+
+            uptime:Math.floor(Date.now()/1000)
+
+        });
+
+    }
+
+},APP.heartbeatInterval);
+
+/*=========================================================
+ START APPLICATION
+=========================================================*/
+
+document.addEventListener("DOMContentLoaded",()=>{
+
+    initializeDashboard();
+
+    console.log("================================");
+
+    console.log(" SMART HOME AUTOMATION V2 ");
+
+    console.log(" Dashboard Ready ");
+
+    console.log(" Version :",APP.version);
+
+    console.log(" Developer :",APP.developer);
+
+    console.log("================================");
+
+});
+
+console.log("Part E Loaded");
