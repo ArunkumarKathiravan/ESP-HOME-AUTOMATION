@@ -1669,6 +1669,204 @@ padding:18px;
     gap: 18px !important;
 }
 
+
+/*=========================================================
+ FINAL HEADER + DASHBOARD + ORDER DESIGN FIX
+=========================================================*/
+
+/* Main page container */
+.container {
+    width: 100%;
+    max-width: 1250px;
+    margin: 0 auto;
+    padding: 25px;
+}
+
+/* Header full rounded box */
+.header {
+    width: 100% !important;
+    border-radius: 24px !important;
+    padding: 35px 45px !important;
+    margin-bottom: 28px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    box-sizing: border-box !important;
+}
+
+/* Dashboard full green marked box */
+.dashboard-plate,
+.dashboard-section {
+    width: 100% !important;
+    min-height: 130px !important;
+    border-radius: 24px !important;
+    padding: 35px 45px !important;
+    margin-bottom: 32px !important;
+    background: rgba(255, 255, 255, 0.08) !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 25px !important;
+    box-sizing: border-box !important;
+}
+
+/* Dashboard text */
+.dashboard-left {
+    flex: 1 !important;
+}
+
+.dashboard-left h1 {
+    font-size: 36px !important;
+    margin: 0 0 14px 0 !important;
+    color: #ffffff !important;
+}
+
+.dashboard-left p {
+    font-size: 16px !important;
+    margin: 0 !important;
+    color: rgba(255, 255, 255, 0.9) !important;
+}
+
+/* Weather box inside dashboard only */
+.dashboard-weather-box {
+    position: static !important;
+    width: 240px !important;
+    min-width: 240px !important;
+    padding: 18px 22px !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    text-align: center !important;
+    box-shadow: none !important;
+    margin: 0 !important;
+}
+
+.dashboard-weather-box .weather-label {
+    font-size: 13px !important;
+    font-weight: 600 !important;
+    margin-bottom: 8px !important;
+    color: rgba(255, 255, 255, 0.8) !important;
+}
+
+.dashboard-weather-box h2,
+#weatherMood {
+    font-size: 23px !important;
+    font-weight: 800 !important;
+    color: #38bdf8 !important;
+    margin: 0 0 8px 0 !important;
+}
+
+#weatherMiniData {
+    font-size: 15px !important;
+    font-weight: 700 !important;
+    color: #ffffff !important;
+    margin: 0 !important;
+}
+
+/* Device section must appear after dashboard */
+.devices-section {
+    width: 100% !important;
+    margin-top: 0 !important;
+    margin-bottom: 34px !important;
+}
+
+/* Device card grid */
+.device-grid {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 24px !important;
+    margin-bottom: 0 !important;
+}
+
+/* Status and summary boxes under switches */
+.status-grid,
+.summary-grid {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 20px !important;
+    margin-top: 24px !important;
+    margin-bottom: 22px !important;
+}
+
+/* Make all cards equal and aligned */
+.status-card,
+.summary-card,
+.device-card {
+    border-radius: 22px !important;
+    box-sizing: border-box !important;
+}
+
+/* Environment section below status/summary */
+.environment-section {
+    width: 100% !important;
+    display: block !important;
+    clear: both !important;
+    margin-top: 45px !important;
+    margin-bottom: 45px !important;
+    padding-top: 35px !important;
+    border-top: 2px solid rgba(255, 255, 255, 0.35) !important;
+    box-sizing: border-box !important;
+}
+
+/* Full width line fix */
+.environment-section::before {
+    display: none !important;
+}
+
+.environment-grid {
+    width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 18px !important;
+}
+
+/* Remove duplicate bottom system status if present */
+.system-info,
+.system-info-grid,
+.system-status-grid,
+.system-status-section {
+    display: none !important;
+}
+
+/* Mobile */
+@media (max-width: 1100px) {
+    .device-grid,
+    .status-grid,
+    .summary-grid,
+    .environment-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .dashboard-plate,
+    .dashboard-section {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+    }
+
+    .dashboard-weather-box {
+        width: 100% !important;
+        min-width: unset !important;
+        text-align: left !important;
+    }
+}
+
+@media (max-width: 650px) {
+    .device-grid,
+    .status-grid,
+    .summary-grid,
+    .environment-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .header {
+        flex-direction: column !important;
+        gap: 18px !important;
+        text-align: center !important;
+    }
+}
+
 .environment-card {
     width: 100% !important;
     min-height: 150px;
