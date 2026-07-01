@@ -434,7 +434,63 @@ Light 2 Card
     </div>
 
 </div>
+<!-- Environment Sensor Section -->
+<section class="environment-section">
 
+    <div class="section-title">
+        <h2>🌡 Environment Monitoring</h2>
+        <p>Live temperature and humidity data from DHT11 sensor</p>
+    </div>
+
+    <div class="environment-grid">
+
+        <!-- Temperature Card -->
+        <div class="environment-card temperature-card">
+            <div class="environment-icon">🌡</div>
+
+            <div class="environment-info">
+                <h3>Temperature</h3>
+                <h1 id="temperatureValue">-- °C</h1>
+                <p id="temperatureStatus">Waiting for sensor...</p>
+            </div>
+        </div>
+
+        <!-- Humidity Card -->
+        <div class="environment-card humidity-card">
+            <div class="environment-icon">💧</div>
+
+            <div class="environment-info">
+                <h3>Humidity</h3>
+                <h1 id="humidityValue">-- %</h1>
+                <p id="humidityStatus">Waiting for sensor...</p>
+            </div>
+        </div>
+
+        <!-- Heat Index Card -->
+        <div class="environment-card heat-card">
+            <div class="environment-icon">🔥</div>
+
+            <div class="environment-info">
+                <h3>Heat Index</h3>
+                <h1 id="heatIndexValue">-- °C</h1>
+                <p>Feels like temperature</p>
+            </div>
+        </div>
+
+        <!-- Sensor Status Card -->
+        <div class="environment-card sensor-card">
+            <div class="environment-icon">📡</div>
+
+            <div class="environment-info">
+                <h3>DHT11 Sensor</h3>
+                <h1 id="sensorStatus">Offline</h1>
+                <p id="sensorLastUpdated">Last updated: --</p>
+            </div>
+        </div>
+
+    </div>
+
+</section>
 </div>
 
 </section>
