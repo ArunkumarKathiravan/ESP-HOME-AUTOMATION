@@ -1009,3 +1009,176 @@ body {
         margin-left: 0;
     }
 }
+
+
+/*=========================================================
+ EXTRA PROFESSIONAL ANIMATIONS
+ Fan spin, bulb glow, socket plug animation, sticky header
+=========================================================*/
+
+/* Make header come with you when scrolling */
+header,
+.top-header,
+.main-header {
+    position: sticky !important;
+    top: 0 !important;
+    z-index: 9999 !important;
+    backdrop-filter: blur(18px) !important;
+    background: rgba(15, 23, 42, 0.92) !important;
+    box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35) !important;
+}
+
+/* Smooth card animation */
+.device-card {
+    transition: transform 0.35s ease, box-shadow 0.35s ease !important;
+}
+
+.device-card:hover {
+    transform: translateY(-10px) scale(1.02) !important;
+    box-shadow: 0 25px 60px rgba(56, 189, 248, 0.30) !important;
+}
+
+/*=========================================================
+ FAN ANIMATION
+ Fan icon spins when mouse goes on Fan card
+=========================================================*/
+
+#fanCard:hover .device-icon i,
+#fanCard.active .device-icon i {
+    animation: fanSpin 0.55s linear infinite;
+}
+
+@keyframes fanSpin {
+    from {
+        transform: rotate(0deg);
+    }
+
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/*=========================================================
+ BULB ANIMATION
+ Bulb glows when mouse goes on Light cards
+=========================================================*/
+
+#light1Card:hover .device-icon,
+#light2Card:hover .device-icon,
+#light1Card.active .device-icon,
+#light2Card.active .device-icon {
+    animation: bulbGlow 1s ease-in-out infinite alternate;
+}
+
+#light1Card:hover .device-icon i,
+#light2Card:hover .device-icon i,
+#light1Card.active .device-icon i,
+#light2Card.active .device-icon i {
+    animation: bulbPulse 1s ease-in-out infinite alternate;
+}
+
+@keyframes bulbGlow {
+    from {
+        box-shadow: 0 0 10px rgba(250, 204, 21, 0.5);
+    }
+
+    to {
+        box-shadow: 0 0 35px rgba(250, 204, 21, 1),
+                    0 0 60px rgba(249, 115, 22, 0.7);
+    }
+}
+
+@keyframes bulbPulse {
+    from {
+        transform: scale(1);
+    }
+
+    to {
+        transform: scale(1.18);
+    }
+}
+
+/*=========================================================
+ SOCKET ANIMATION
+ Socket icon moves like plug/unplug
+=========================================================*/
+
+#socketCard:hover .device-icon i,
+#socketCard.active .device-icon i {
+    animation: plugMove 0.8s ease-in-out infinite;
+}
+
+@keyframes plugMove {
+    0% {
+        transform: translateX(0) rotate(0deg);
+    }
+
+    35% {
+        transform: translateX(-5px) rotate(-8deg);
+    }
+
+    70% {
+        transform: translateX(5px) rotate(8deg);
+    }
+
+    100% {
+        transform: translateX(0) rotate(0deg);
+    }
+}
+
+/*=========================================================
+ ACTIVE CARD GLOW
+ When switch is ON card gets glowing border
+=========================================================*/
+
+.device-card.active {
+    border: 2px solid rgba(34, 197, 94, 0.75) !important;
+    box-shadow: 0 0 25px rgba(34, 197, 94, 0.35),
+                0 18px 40px rgba(0, 0, 0, 0.25) !important;
+}
+
+/*=========================================================
+ STATUS CARD HOVER ANIMATION
+=========================================================*/
+
+.status-card,
+.info-card,
+.summary-card,
+.environment-card,
+.env-card,
+.stats-card,
+.stat-card {
+    transition: transform 0.35s ease, box-shadow 0.35s ease !important;
+}
+
+.status-card:hover,
+.info-card:hover,
+.summary-card:hover,
+.environment-card:hover,
+.env-card:hover,
+.stats-card:hover,
+.stat-card:hover {
+    transform: translateY(-8px) !important;
+    box-shadow: 0 22px 55px rgba(56, 189, 248, 0.25) !important;
+}
+
+/*=========================================================
+ ICON FLOATING ANIMATION
+=========================================================*/
+
+.status-card:hover .icon,
+.info-card:hover .info-icon,
+.environment-card:hover .environment-icon,
+.env-card:hover .env-icon {
+    animation: iconFloat 0.9s ease-in-out infinite alternate;
+}
+
+@keyframes iconFloat {
+    from {
+        transform: translateY(0);
+    }
+
+    to {
+        transform: translateY(-6px);
+    }
+}
