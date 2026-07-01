@@ -1513,3 +1513,57 @@ padding:18px;
     color: #ffffff;
     font-weight: 700;
 }
+
+
+/*=========================================================
+ HEADER DATE TIME TEMPERATURE ALIGNMENT
+=========================================================*/
+
+.header-center-info {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+}
+
+.header-date {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    opacity: 0.9;
+}
+
+.header-time {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.header-temperature {
+    margin-top: 4px;
+    padding: 6px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 700;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.18);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+#topTemperatureValue {
+    color: #ffffff;
+    font-weight: 800;
+}
+
+/* remove old right side temperature style if it exists */
+.top-temperature-box {
+    display: none !important;
+}
