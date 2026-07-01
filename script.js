@@ -11,22 +11,21 @@
 
 const firebaseConfig = {
 
-    apiKey: "YOUR_API_KEY",
+    apiKey: "AIzaSyDOWMHv22hZjSDP1EwVGuJM8Oj5NIzAIpo",
 
-    authDomain: "YOUR_AUTH_DOMAIN",
+    authDomain: "esp-32-home-automation-f158c.firebaseapp.com",
 
-    databaseURL: "YOUR_DATABASE_URL",
+    databaseURL: "https://esp-32-home-automation-f158c-default-rtdb.asia-southeast1.firebasedatabase.app",
 
-    projectId: "YOUR_PROJECT_ID",
+    projectId: "esp-32-home-automation-f158c",
 
-    storageBucket: "YOUR_STORAGE_BUCKET",
+    storageBucket: "esp-32-home-automation-f158c.firebasestorage.app",
 
-    messagingSenderId: "YOUR_SENDER_ID",
+    messagingSenderId: "1029711889803",
 
-    appId: "YOUR_APP_ID"
+    appId: "1:1029711889803:web:69d4dd39dcde60ebb71b8e"
 
 };
-
 firebase.initializeApp(firebaseConfig);
 
 const database = firebase.database();
