@@ -1085,3 +1085,38 @@ document.addEventListener("DOMContentLoaded",()=>{
 });
 
 console.log("Part E Loaded");
+
+
+/*=========================================================
+ HIDE LOADING SCREEN
+=========================================================*/
+
+function hideLoader(){
+
+    const loader = document.getElementById("loader");
+
+    if(loader){
+
+        loader.style.opacity = "0";
+
+        loader.style.transition = "0.5s";
+
+        setTimeout(()=>{
+
+            loader.style.display = "none";
+
+        },500);
+
+    }
+
+}
+
+window.addEventListener("load",()=>{
+
+    setTimeout(()=>{
+
+        hideLoader();
+
+    },1000);
+
+});
