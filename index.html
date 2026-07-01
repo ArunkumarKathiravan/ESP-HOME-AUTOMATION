@@ -27,7 +27,106 @@
 </head>
 
 <body>
+ <!-- =====================================================
+ LOGIN / SIGNUP PAGE
+ This page appears before Smart Home dashboard.
+===================================================== -->
 
+<div class="auth-screen" id="authScreen">
+
+    <div class="auth-card">
+
+        <div class="auth-logo">
+            <i class="fa-solid fa-house-signal"></i>
+        </div>
+
+        <h1>Smart Home Login</h1>
+
+        <p class="auth-subtitle">
+            Sign in to control your ESP32 Smart Home dashboard
+        </p>
+
+        <!-- Sign In Form -->
+        <div class="auth-form" id="loginForm">
+
+            <input
+                type="email"
+                id="loginEmail"
+                placeholder="Email address">
+
+            <input
+                type="password"
+                id="loginPassword"
+                placeholder="Password">
+
+            <button id="loginBtn">
+                Sign In
+            </button>
+
+            <p class="auth-link" id="showForgot">
+                Forgot password?
+            </p>
+
+            <p class="auth-switch">
+                New user?
+                <span id="showSignup">Create account</span>
+            </p>
+
+        </div>
+
+        <!-- Sign Up Form -->
+        <div class="auth-form hidden" id="signupForm">
+
+            <input
+                type="text"
+                id="signupName"
+                placeholder="Username">
+
+            <input
+                type="email"
+                id="signupEmail"
+                placeholder="Email address">
+
+            <input
+                type="password"
+                id="signupPassword"
+                placeholder="Create password">
+
+            <button id="signupBtn">
+                Create Account
+            </button>
+
+            <p class="auth-switch">
+                Already have account?
+                <span id="showLogin">Sign in</span>
+            </p>
+
+        </div>
+
+        <!-- Forgot Password Form -->
+        <div class="auth-form hidden" id="forgotForm">
+
+            <input
+                type="email"
+                id="forgotEmail"
+                placeholder="Enter your registered email">
+
+            <button id="forgotBtn">
+                Send Reset Email
+            </button>
+
+            <p class="auth-switch">
+                Back to
+                <span id="backToLogin">Sign in</span>
+            </p>
+
+        </div>
+
+        <p id="authMessage" class="auth-message"></p>
+
+    </div>
+
+</div>
     <!-- Main app wrapper -->
     <div class="app">
 
