@@ -1765,3 +1765,118 @@ padding:18px;
         margin-top: 10px;
     }
 }
+
+/*=========================================================
+ FINAL PAGE ORDER FIX
+=========================================================*/
+
+/* Make main page sections follow our custom order */
+.container {
+    display: flex !important;
+    flex-direction: column !important;
+}
+
+/* 1. Header */
+.header {
+    order: 1 !important;
+}
+
+/* 2. Dashboard plate */
+.dashboard-section,
+.dashboard-plate {
+    order: 2 !important;
+}
+
+/* 3. Device switches */
+.devices-section,
+.device-section {
+    order: 3 !important;
+}
+
+/* 4. DHT11 / weather sensor section */
+.environment-section {
+    order: 4 !important;
+}
+
+/* 5. WiFi / Firebase / ESP32 / Last Update cards */
+.status-grid,
+.status-cards,
+.connection-grid {
+    order: 5 !important;
+}
+
+/* 6. Devices / Running / Operations / Runtime cards */
+.summary-grid,
+.summary-cards {
+    order: 6 !important;
+}
+
+/* 7. Statistics */
+.statistics-section,
+.stats-section {
+    order: 7 !important;
+}
+
+/* 8. History */
+.history-section {
+    order: 8 !important;
+}
+/*=========================================================
+ HIDE DUPLICATE STATUS SECTION
+ This hides the second ESP32 Status / Firebase Status / WiFi Status row
+=========================================================*/
+
+.system-info,
+.system-info-grid,
+.system-status-grid,
+.system-status-section {
+    display: none !important;
+}
+
+/*=========================================================
+ DASHBOARD PLATE WEATHER POSITION FIX
+=========================================================*/
+
+.dashboard-plate,
+.dashboard-section {
+    width: 100% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+    gap: 20px !important;
+}
+
+.dashboard-left {
+    flex: 1 !important;
+}
+
+.dashboard-weather-box {
+    position: static !important;
+    margin-left: auto !important;
+    min-width: 230px !important;
+    max-width: 280px !important;
+    padding: 16px 20px !important;
+    border-radius: 18px !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    text-align: right !important;
+}
+
+/*=========================================================
+ FULL WIDTH SEPARATOR LINE BEFORE ENVIRONMENT
+=========================================================*/
+
+.environment-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-top: 2px solid rgba(255, 255, 255, 0.35) !important;
+    padding-top: 35px !important;
+    margin-top: 45px !important;
+}
+
+.environment-section::before {
+    display: none !important;
+}
+
+.environment-grid {
+    width: 100% !important;
+}
