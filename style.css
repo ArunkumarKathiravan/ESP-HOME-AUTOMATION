@@ -1567,3 +1567,201 @@ padding:18px;
 .top-temperature-box {
     display: none !important;
 }
+
+/*=========================================================
+ FINAL LAYOUT ORDER FIX
+=========================================================*/
+
+.dashboard-plate {
+    display: flex !important;
+    align-items: center;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.dashboard-left h1 {
+    margin-bottom: 12px;
+}
+
+.dashboard-weather-box {
+    min-width: 230px;
+    padding: 16px 20px;
+    border-radius: 18px;
+    background: rgba(255, 255, 255, 0.12);
+    text-align: right;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+}
+
+.weather-label {
+    font-size: 13px;
+    opacity: 0.8;
+    margin-bottom: 6px;
+}
+
+.weather-mood {
+    font-size: 22px;
+    font-weight: 800;
+    color: #38bdf8;
+    margin-bottom: 5px;
+}
+
+.weather-mini-data {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ffffff;
+    opacity: 0.9;
+}
+
+
+/*=========================================================
+ DEVICE CONTROL SHOULD COME ABOVE STATUS CARDS
+=========================================================*/
+
+.devices-section {
+    margin-top: 30px;
+    margin-bottom: 45px;
+}
+
+.device-grid {
+    margin-bottom: 0 !important;
+}
+
+
+/*=========================================================
+ DHT11 ENVIRONMENT SECTION FULL WIDTH
+=========================================================*/
+
+.environment-section {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: block !important;
+    clear: both !important;
+    grid-column: 1 / -1 !important;
+
+    margin-top: 40px !important;
+    margin-bottom: 45px !important;
+    padding-top: 35px !important;
+
+    border-top: 2px solid rgba(255, 255, 255, 0.35) !important;
+}
+
+.environment-section::before {
+    content: "";
+    display: block;
+    width: 100%;
+    height: 1px;
+}
+
+.environment-section .section-title {
+    width: 100%;
+    margin-bottom: 22px;
+}
+
+.environment-section .section-title h2 {
+    white-space: normal;
+}
+
+.environment-grid {
+    width: 100% !important;
+    max-width: 100% !important;
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 18px !important;
+}
+
+.environment-card {
+    width: 100% !important;
+    min-height: 150px;
+}
+
+
+/*=========================================================
+ MAKE CARD INSIDE LINE FULL WIDTH
+=========================================================*/
+
+.device-card hr,
+.environment-card hr,
+.card-line {
+    width: 100% !important;
+}
+
+.device-card::after,
+.environment-card::after {
+    width: 100% !important;
+}
+
+
+/*=========================================================
+ HEADER DATE TIME TEMPERATURE
+=========================================================*/
+
+.header-center-info {
+    text-align: center;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+}
+
+.header-date {
+    font-size: 15px;
+    font-weight: 600;
+    color: #ffffff;
+    opacity: 0.9;
+}
+
+.header-time {
+    font-size: 15px;
+    font-weight: 700;
+    color: #ffffff;
+}
+
+.header-temperature {
+    margin-top: 4px;
+    padding: 6px 14px;
+    border-radius: 18px;
+    font-size: 14px;
+    font-weight: 800;
+    color: #ffffff;
+    background: rgba(255, 255, 255, 0.18);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+}
+
+.top-temperature-box {
+    display: none !important;
+}
+
+
+/*=========================================================
+ RESPONSIVE
+=========================================================*/
+
+@media (max-width: 1100px) {
+    .environment-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+
+    .dashboard-plate {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .dashboard-weather-box {
+        width: 100%;
+        text-align: left;
+    }
+}
+
+@media (max-width: 650px) {
+    .environment-grid {
+        grid-template-columns: 1fr !important;
+    }
+
+    .header-center-info {
+        margin-top: 10px;
+    }
+}
