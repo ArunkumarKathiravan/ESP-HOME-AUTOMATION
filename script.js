@@ -1,277 +1,883 @@
 /*=========================================================
  SMART HOME AUTOMATION V2
- Part 3A
- Developed by Arunkumar
+ SCRIPT.JS
+ PART A
+ Developed for Arunkumar
 =========================================================*/
 
-/*==========================
- Firebase Configuration
-==========================*/
+/*=========================================================
+ FIREBASE CONFIGURATION
+=========================================================*/
 
 const firebaseConfig = {
 
-  apiKey: "AIzaSyDOWMHv22hZjSDP1EwVGuJM8Oj5NIzAIpo",
+    apiKey: "YOUR_API_KEY",
 
-  authDomain: "esp-32-home-automation-f158c.firebaseapp.com",
+    authDomain: "YOUR_AUTH_DOMAIN",
 
-  databaseURL: "https://esp-32-home-automation-f158c-default-rtdb.asia-southeast1.firebasedatabase.app",
+    databaseURL: "YOUR_DATABASE_URL",
 
-  projectId: "esp-32-home-automation-f158c",
+    projectId: "YOUR_PROJECT_ID",
 
-  storageBucket: "esp-32-home-automation-f158c.firebasestorage.app",
+    storageBucket: "YOUR_STORAGE_BUCKET",
 
-  messagingSenderId: "1029711889803",
+    messagingSenderId: "YOUR_SENDER_ID",
 
-  appId: "1:1029711889803:web:69d4dd39dcde60ebb71b8e"
+    appId: "YOUR_APP_ID"
 
 };
-
-/*==========================
- Initialize Firebase
-==========================*/
 
 firebase.initializeApp(firebaseConfig);
 
 const database = firebase.database();
 
-/*==========================
- HTML Elements
-==========================*/
+/*=========================================================
+ PROJECT INFORMATION
+=========================================================*/
 
-// Fan
+const PROJECT_NAME="ESP32 Smart Home V2";
 
-const fanSwitch = document.getElementById("fanSwitch");
-const fanState = document.getElementById("fanState");
+const VERSION="2.0.0";
 
-// Light 1
+console.log(PROJECT_NAME);
 
-const light1Switch = document.getElementById("light1Switch");
-const light1State = document.getElementById("light1State");
+console.log("Version :",VERSION);
 
-// Socket
+/*=========================================================
+ DEVICE INFORMATION
+=========================================================*/
 
-const socketSwitch = document.getElementById("socketSwitch");
-const socketState = document.getElementById("socketState");
+const DEVICES={
 
-// Light 2
+    fan:"fan",
 
-const light2Switch = document.getElementById("light2Switch");
-const light2State = document.getElementById("light2State");
+    light1:"light1",
 
-// Status
+    socket:"socket",
 
-const wifiStatus = document.getElementById("wifiStatus");
-const firebaseStatus = document.getElementById("firebaseStatus");
-const espStatus = document.getElementById("espStatus");
-const lastUpdate = document.getElementById("lastUpdate");
+    light2:"light2"
 
-// Summary
+};
 
-const runningCount = document.getElementById("runningCount");
-const operationCount = document.getElementById("operationCount");
+/*=========================================================
+ DATABASE REFERENCES
+=========================================================*/
 
-/*==========================
- Live Date & Time
-==========================*/
+const rootRef=database.ref("SmartHome");
 
-function updateClock(){
+const deviceRef=rootRef.child("devices");
 
-    const now = new Date();
+const systemRef=rootRef.child("system");
 
-    document.getElementById("date").innerHTML =
-        now.toDateString();
+const statisticsRef=rootRef.child("statistics");
 
-    document.getElementById("time").innerHTML =
-        now.toLocaleTimeString();
+const historyRef=rootRef.child("history");
 
-}
+/*=========================================================
+ DEVICE REFERENCES
+=========================================================*/
 
-setInterval(updateClock,1000);
+const fanRef=deviceRef.child("fan");
 
-updateClock();
+const light1Ref=deviceRef.child("light1");
 
-/*==========================
- Firebase Status
-==========================*/
+const socketRef=deviceRef.child("socket");
 
-firebaseStatus.innerHTML="Connecting...";
+const light2Ref=deviceRef.child("light2");
+
+/*=========================================================
+ HTML ELEMENTS
+=========================================================*/
+
+const fanSwitch=document.getElementById("fanSwitch");
+
+const light1Switch=document.getElementById("light1Switch");
+
+const socketSwitch=document.getElementById("socketSwitch");
+
+const light2Switch=document.getElementById("light2Switch");
+
+const fanState=document.getElementById("fanState");
+
+const light1State=document.getElementById("light1State");
+
+const socketState=document.getElementById("socketState");
+
+const light2State=document.getElementById("light2State");
+
+const espStatus=document.getElementById("espStatus");
+
+const firebaseStatus=document.getElementById("firebaseStatus");
+
+const wifiStatus=document.getElementById("wifiStatus");
+
+const runningCount=document.getElementById("runningCount");
+
+const operationCount=document.getElementById("operationCount");
+
+const historyContainer=document.getElementById("historyContainer");
+
+const notificationContainer=document.getElementById("notificationContainer");
+
+/*=========================================================
+ GLOBAL VARIABLES
+=========================================================*/
+
+let fan=false;
+
+let light1=false;
+
+let socket=false;
+
+let light2=false;
+
+let totalRunning=0;
+
+let totalOperations=0;
+
+let firebaseConnected=false;
+
+let espConnected=false;
+
+/*=========================================================
+ FIREBASE CONNECTION
+=========================================================*/
 
 database.ref(".info/connected").on("value",(snap)=>{
 
-    if(snap.val()){
+    firebaseConnected=snap.val();
+
+    if(firebaseConnected){
 
         firebaseStatus.innerHTML="Connected";
 
         firebaseStatus.style.color="#22c55e";
 
-    }
-
-    else{
+    }else{
 
         firebaseStatus.innerHTML="Disconnected";
 
-        firebaseStatus.style.color="red";
+        firebaseStatus.style.color="#ef4444";
 
     }
 
 });
 
-/*==========================
- WiFi Status
-==========================*/
+/*=========================================================
+ ESP STATUS
+=========================================================*/
 
-wifiStatus.innerHTML="Online";
+systemRef.child("espOnline").on("value",(snap)=>{
 
-wifiStatus.style.color="#22c55e";
+    if(snap.exists()){
 
-/*==========================
- ESP32 Online Detection
-==========================*/
+        espConnected=snap.val();
 
-database.ref("system/espOnline").on("value",(snapshot)=>{
-
-    if(snapshot.exists()){
-
-        if(snapshot.val()==true){
+        if(espConnected){
 
             espStatus.innerHTML="Online";
 
             espStatus.style.color="#22c55e";
 
-        }
-
-        else{
+        }else{
 
             espStatus.innerHTML="Offline";
 
-            espStatus.style.color="red";
+            espStatus.style.color="#ef4444";
 
         }
 
     }
 
-    else{
+});
 
-        espStatus.innerHTML="Unknown";
+/*=========================================================
+ WIFI STATUS
+=========================================================*/
 
-        espStatus.style.color="orange";
+systemRef.child("wifiRSSI").on("value",(snap)=>{
 
-    }
+    if(!snap.exists()) return;
+
+    const rssi=snap.val();
+
+    wifiStatus.innerHTML=rssi+" dBm";
 
 });
 
-/*==========================
- Update Time
-==========================*/
+/*=========================================================
+ STARTUP
+=========================================================*/
 
-function updateLastTime(){
+console.log("Firebase Ready");
 
-    const t=new Date();
+console.log("Realtime Database Ready");
 
-    lastUpdate.innerHTML=t.toLocaleTimeString();
+console.log("Part A Loaded");
 
-}
-
-/*==========================
- Running Devices
-==========================*/
-
-let running=0;
-
-function calculateRunning(){
-
-running=0;
-
-if(fanSwitch.checked) running++;
-
-if(light1Switch.checked) running++;
-
-if(socketSwitch.checked) running++;
-
-if(light2Switch.checked) running++;
-
-runningCount.innerHTML=running;
-
-}
-
-/*==========================
- Console
-==========================*/
-
-console.log("Smart Home Automation V2 Loaded");
-
-console.log("Firebase Connected");
-
-/*==========================
- End Part 3A
-==========================*/
-
-/*==========================
- Hide Loading Screen
-==========================*/
-
-window.addEventListener("load", () => {
-
-    const loader = document.getElementById("loader");
-
-    if (loader) {
-
-        loader.style.opacity = "0";
-
-        setTimeout(() => {
-
-            loader.style.display = "none";
-
-        }, 500);
-
-    }
-
-});
-
-/*==========================================================
+/*=========================================================
  SMART HOME AUTOMATION V2
- Part 4D
- WEBSITE SIMULATION MODE
-==========================================================*/
+ SCRIPT.JS
+ PART B
+ DEVICE SYNCHRONIZATION
+=========================================================*/
 
-const SIMULATION_MODE = true;
+/*=========================================================
+ DEVICE UI UPDATE
+=========================================================*/
 
-/*=========================
- SIMULATE ESP32
-=========================*/
+function updateDeviceUI(deviceName, state){
 
-if (SIMULATION_MODE) {
+    switch(deviceName){
 
-    console.log("Simulation Mode Enabled");
+        case "fan":
 
-    database.ref("SmartHome/system").update({
+            fan = state;
+            fanSwitch.checked = state;
+            fanState.innerHTML = state ? "ON" : "OFF";
 
-        espOnline: true,
-        firmwareVersion: "Simulation V1.0",
-        wifiRSSI: -45,
-        uptime: 0,
-        lastSeen: Date.now()
+        break;
+
+        case "light1":
+
+            light1 = state;
+            light1Switch.checked = state;
+            light1State.innerHTML = state ? "ON" : "OFF";
+
+        break;
+
+        case "socket":
+
+            socket = state;
+            socketSwitch.checked = state;
+            socketState.innerHTML = state ? "ON" : "OFF";
+
+        break;
+
+        case "light2":
+
+            light2 = state;
+            light2Switch.checked = state;
+            light2State.innerHTML = state ? "ON" : "OFF";
+
+        break;
+
+    }
+
+    calculateRunningDevices();
+
+}
+
+/*=========================================================
+ RUNNING DEVICES
+=========================================================*/
+
+function calculateRunningDevices(){
+
+    let count = 0;
+
+    if(fan) count++;
+
+    if(light1) count++;
+
+    if(socket) count++;
+
+    if(light2) count++;
+
+    totalRunning = count;
+
+    runningCount.innerHTML = count;
+
+}
+
+/*=========================================================
+ FIREBASE WRITE
+=========================================================*/
+
+function setDevice(deviceName,state,source="web"){
+
+    updateDeviceUI(deviceName,state);
+
+    deviceRef.child(deviceName).update({
+
+        state:state,
+
+        source:source,
+
+        lastUpdated:Date.now()
 
     });
 
 }
 
-/*=========================
- UPDATE LAST SEEN
-=========================*/
+/*=========================================================
+ REALTIME LISTENERS
+=========================================================*/
 
-setInterval(() => {
+fanRef.child("state").on("value",(snap)=>{
 
-    if (SIMULATION_MODE) {
+    if(snap.exists()){
 
-        database.ref("SmartHome/system").update({
-
-            lastSeen: Date.now(),
-
-            uptime: Math.floor(Date.now()/1000)
-
-        });
+        updateDeviceUI("fan",snap.val());
 
     }
 
-},5000);
+});
+
+light1Ref.child("state").on("value",(snap)=>{
+
+    if(snap.exists()){
+
+        updateDeviceUI("light1",snap.val());
+
+    }
+
+});
+
+socketRef.child("state").on("value",(snap)=>{
+
+    if(snap.exists()){
+
+        updateDeviceUI("socket",snap.val());
+
+    }
+
+});
+
+light2Ref.child("state").on("value",(snap)=>{
+
+    if(snap.exists()){
+
+        updateDeviceUI("light2",snap.val());
+
+    }
+
+});
+
+/*=========================================================
+ SWITCH EVENTS
+=========================================================*/
+
+fanSwitch.addEventListener("change",()=>{
+
+    setDevice("fan",fanSwitch.checked,"web");
+
+});
+
+light1Switch.addEventListener("change",()=>{
+
+    setDevice("light1",light1Switch.checked,"web");
+
+});
+
+socketSwitch.addEventListener("change",()=>{
+
+    setDevice("socket",socketSwitch.checked,"web");
+
+});
+
+light2Switch.addEventListener("change",()=>{
+
+    setDevice("light2",light2Switch.checked,"web");
+
+});
+
+/*=========================================================
+ OPERATION COUNTER
+=========================================================*/
+
+function increaseOperationCounter(){
+
+    totalOperations++;
+
+    operationCount.innerHTML = totalOperations;
+
+}
+
+fanSwitch.addEventListener("change",increaseOperationCounter);
+
+light1Switch.addEventListener("change",increaseOperationCounter);
+
+socketSwitch.addEventListener("change",increaseOperationCounter);
+
+light2Switch.addEventListener("change",increaseOperationCounter);
+
+console.log("Part B Loaded");
+/*=========================================================
+ SMART HOME AUTOMATION V2
+ SCRIPT.JS
+ PART C
+ HISTORY • STATISTICS • NOTIFICATIONS
+=========================================================*/
+
+/*=========================================================
+ DEVICE RUNTIME
+=========================================================*/
+
+const runtime={
+
+    fan:0,
+
+    light1:0,
+
+    socket:0,
+
+    light2:0
+
+};
+
+const onCounter={
+
+    fan:0,
+
+    light1:0,
+
+    socket:0,
+
+    light2:0
+
+};
+
+/*=========================================================
+ NOTIFICATION
+=========================================================*/
+
+function showNotification(message){
+
+    console.log(message);
+
+    if(notificationContainer){
+
+        const div=document.createElement("div");
+
+        div.className="notification";
+
+        div.innerHTML=message;
+
+        notificationContainer.prepend(div);
+
+        setTimeout(()=>{
+
+            div.remove();
+
+        },5000);
+
+    }
+
+}
+
+/*=========================================================
+ HISTORY
+=========================================================*/
+
+function addHistory(device,state,source){
+
+    const data={
+
+        device:device,
+
+        state:state?"ON":"OFF",
+
+        source:source,
+
+        time:Date.now()
+
+    };
+
+    historyRef.push(data);
+
+    if(historyContainer){
+
+        const card=document.createElement("div");
+
+        card.className="historyCard";
+
+        card.innerHTML=`
+
+        <strong>${device}</strong><br>
+
+        ${state?"ON":"OFF"}<br>
+
+        ${source}<br>
+
+        ${new Date().toLocaleTimeString()}
+
+        `;
+
+        historyContainer.prepend(card);
+
+    }
+
+}
+
+/*=========================================================
+ SAVE STATISTICS
+=========================================================*/
+
+function saveStatistics(){
+
+    statisticsRef.set({
+
+        runningDevices:totalRunning,
+
+        totalOperations:totalOperations,
+
+        runtime:runtime,
+
+        onCounter:onCounter,
+
+        updated:Date.now()
+
+    });
+
+}
+
+/*=========================================================
+ RUNTIME TIMER
+=========================================================*/
+
+setInterval(()=>{
+
+    if(fan) runtime.fan++;
+
+    if(light1) runtime.light1++;
+
+    if(socket) runtime.socket++;
+
+    if(light2) runtime.light2++;
+
+    saveStatistics();
+
+},1000);
+
+/*=========================================================
+ DEVICE EVENT
+=========================================================*/
+
+function deviceChanged(device,state,source){
+
+    if(state){
+
+        onCounter[device]++;
+
+    }
+
+    addHistory(device,state,source);
+
+    showNotification(
+
+        device.toUpperCase()+" "+
+
+        (state?"ON":" OFF")+" via "+source
+
+    );
+
+    saveStatistics();
+
+}
+
+/*=========================================================
+ LISTEN FOR SOURCE
+=========================================================*/
+
+fanRef.on("value",(snap)=>{
+
+    if(!snap.exists()) return;
+
+    const d=snap.val();
+
+    deviceChanged("fan",d.state,d.source);
+
+});
+
+light1Ref.on("value",(snap)=>{
+
+    if(!snap.exists()) return;
+
+    const d=snap.val();
+
+    deviceChanged("light1",d.state,d.source);
+
+});
+
+socketRef.on("value",(snap)=>{
+
+    if(!snap.exists()) return;
+
+    const d=snap.val();
+
+    deviceChanged("socket",d.state,d.source);
+
+});
+
+light2Ref.on("value",(snap)=>{
+
+    if(!snap.exists()) return;
+
+    const d=snap.val();
+
+    deviceChanged("light2",d.state,d.source);
+
+});
+
+/*=========================================================
+ DASHBOARD SUMMARY
+=========================================================*/
+
+setInterval(()=>{
+
+    runningCount.innerHTML=totalRunning;
+
+    operationCount.innerHTML=totalOperations;
+
+},500);
+
+console.log("Part C Loaded");
+
+/*=========================================================
+ SMART HOME AUTOMATION V2
+ SCRIPT.JS
+ PART D
+ PERFORMANCE • CONNECTION • UI
+ Developed for Arunkumar
+=========================================================*/
+
+/*=========================================================
+ CONNECTION MONITOR
+=========================================================*/
+
+let internetConnected = navigator.onLine;
+
+window.addEventListener("online",()=>{
+
+    internetConnected=true;
+
+    showNotification("Internet Connected");
+
+    firebaseStatus.innerHTML="Connected";
+
+    firebaseStatus.style.color="#22c55e";
+
+});
+
+window.addEventListener("offline",()=>{
+
+    internetConnected=false;
+
+    showNotification("Internet Disconnected");
+
+    firebaseStatus.innerHTML="Offline";
+
+    firebaseStatus.style.color="#ef4444";
+
+});
+
+/*=========================================================
+ ESP HEARTBEAT
+=========================================================*/
+
+let lastHeartbeat=0;
+
+systemRef.child("lastSeen").on("value",(snap)=>{
+
+    if(!snap.exists()) return;
+
+    lastHeartbeat=snap.val();
+
+});
+
+setInterval(()=>{
+
+    const now=Date.now();
+
+    if(now-lastHeartbeat<15000){
+
+        espStatus.innerHTML="Online";
+
+        espStatus.style.color="#22c55e";
+
+    }
+
+    else{
+
+        espStatus.innerHTML="Offline";
+
+        espStatus.style.color="#ef4444";
+
+    }
+
+},3000);
+
+/*=========================================================
+ WIFI SIGNAL
+=========================================================*/
+
+systemRef.child("wifiRSSI").on("value",(snap)=>{
+
+    if(!snap.exists()) return;
+
+    const rssi=snap.val();
+
+    wifiStatus.innerHTML=rssi+" dBm";
+
+    if(rssi>-60){
+
+        wifiStatus.style.color="#22c55e";
+
+    }
+
+    else if(rssi>-75){
+
+        wifiStatus.style.color="#f59e0b";
+
+    }
+
+    else{
+
+        wifiStatus.style.color="#ef4444";
+
+    }
+
+});
+
+/*=========================================================
+ CARD ANIMATION
+=========================================================*/
+
+function animateCard(card){
+
+    if(!card) return;
+
+    card.style.transform="scale(0.97)";
+
+    setTimeout(()=>{
+
+        card.style.transform="scale(1)";
+
+    },120);
+
+}
+
+/*=========================================================
+ FAST DEVICE UPDATE
+=========================================================*/
+
+function fastUI(device,state){
+
+    updateDeviceUI(device,state);
+
+    switch(device){
+
+        case "fan":
+
+            animateCard(document.getElementById("fanCard"));
+
+        break;
+
+        case "light1":
+
+            animateCard(document.getElementById("light1Card"));
+
+        break;
+
+        case "socket":
+
+            animateCard(document.getElementById("socketCard"));
+
+        break;
+
+        case "light2":
+
+            animateCard(document.getElementById("light2Card"));
+
+        break;
+
+    }
+
+}
+
+/*=========================================================
+ LOADING ANIMATION
+=========================================================*/
+
+window.addEventListener("load",()=>{
+
+    document.body.style.opacity="0";
+
+    document.body.style.transition="0.5s";
+
+    setTimeout(()=>{
+
+        document.body.style.opacity="1";
+
+    },100);
+
+});
+
+/*=========================================================
+ AUTO REFRESH CLOCK
+=========================================================*/
+
+setInterval(()=>{
+
+    const now=new Date();
+
+    if(document.getElementById("time"))
+
+        document.getElementById("time").innerHTML=
+
+        now.toLocaleTimeString();
+
+    if(document.getElementById("date"))
+
+        document.getElementById("date").innerHTML=
+
+        now.toDateString();
+
+},1000);
+
+/*=========================================================
+ DATABASE CONNECTION TEST
+=========================================================*/
+
+database.ref(".info/connected").on("value",(snap)=>{
+
+    if(snap.val()){
+
+        console.log("Realtime Database Connected");
+
+    }
+
+    else{
+
+        console.log("Realtime Database Disconnected");
+
+    }
+
+});
+
+/*=========================================================
+ KEEP WEBSITE ALIVE
+=========================================================*/
+
+setInterval(()=>{
+
+    systemRef.child("websiteLastSeen").set(Date.now());
+
+},10000);
+
+/*=========================================================
+ STARTUP MESSAGE
+=========================================================*/
+
+console.log("====================================");
+
+console.log("SMART HOME AUTOMATION V2");
+
+console.log("Performance Module Loaded");
+
+console.log("Realtime Sync Enabled");
+
+console.log("Waiting for ESP32...");
+
+console.log("====================================");
