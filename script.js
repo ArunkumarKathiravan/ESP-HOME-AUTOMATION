@@ -629,18 +629,23 @@ console.log("Smart Home Automation V2 Dark Theme loaded");
 
 
 /*=========================================================
- FIREBASE AUTH LOGIN SYSTEM
- Email + Password + Email Verification + Forgot Password
+ FIREBASE AUTH LOGIN SYSTEM V2
+ Email Verification Page + Camera Demo + Local Hashed Login
 =========================================================*/
 
 const auth = firebase.auth();
 
-/* Auth page elements */
+/*=========================================================
+ AUTH ELEMENTS
+=========================================================*/
+
 const authScreen = document.getElementById("authScreen");
 
 const loginForm = document.getElementById("loginForm");
 const signupForm = document.getElementById("signupForm");
 const forgotForm = document.getElementById("forgotForm");
+const verifyForm = document.getElementById("verifyForm");
+const faceForm = document.getElementById("faceForm");
 
 const authMessage = document.getElementById("authMessage");
 
@@ -653,9 +658,14 @@ const signupPassword = document.getElementById("signupPassword");
 
 const forgotEmail = document.getElementById("forgotEmail");
 
+const verifyEmailText = document.getElementById("verifyEmailText");
+
 const loginBtn = document.getElementById("loginBtn");
 const signupBtn = document.getElementById("signupBtn");
 const forgotBtn = document.getElementById("forgotBtn");
+
+const checkVerifyBtn = document.getElementById("checkVerifyBtn");
+const resendVerifyBtn = document.getElementById("resendVerifyBtn");
 
 const logoutBtn = document.getElementById("logoutBtn");
 
@@ -663,6 +673,44 @@ const showSignup = document.getElementById("showSignup");
 const showLogin = document.getElementById("showLogin");
 const showForgot = document.getElementById("showForgot");
 const backToLogin = document.getElementById("backToLogin");
+const verifyBackLogin = document.getElementById("verifyBackLogin");
+
+const faceVerifyBtn = document.getElementById("faceVerifyBtn");
+const faceBackLogin = document.getElementById("faceBackLogin");
+const faceVideo = document.getElementById("faceVideo");
+const faceStatus = document.getElementById("faceStatus");
+
+const localUserName = document.getElementById("localUserName");
+const localUserPassword = document.getElementById("localUserPassword");
+const localLoginBtn = document.getElementById("localLoginBtn");
+
+/*=========================================================
+ EMAIL VERIFICATION REDIRECT SETTINGS
+=========================================================*/
+
+const emailActionSettings = {
+    url: window.location.origin + window.location.pathname + "?verified=1",
+    handleCodeInApp: false
+};
+
+/*=========================================================
+ LOCAL DEMO HASHED USERS
+ Demo only. Not real production security.
+=========================================================*/
+
+const LOCAL_AUTH_SALT = "AK_SMART_HOME_V2";
+
+const LOCAL_USERS = [
+    {
+        hash: "8c6d26bdb8fa557dd0828f30481725dc1dbaefae6904c31610e2aab4f13cc910"
+    },
+    {
+        hash: "9b8ff5dd5e018e23085d4ecae35b3cd4e822d62e9e90a0b1a44811db442f87d2"
+    },
+    {
+        hash: "4113675f36681507bc8aebf411eff445313d05814a69a9edd5a9e3221c040857"
+    }
+];
 
 /*=========================================================
  MESSAGE FUNCTION
@@ -678,32 +726,76 @@ function showAuthMessage(message, type) {
 }
 
 /*=========================================================
- FORM SWITCHING
+ FORM CONTROL
 =========================================================*/
 
+function hideAllAuthForms() {
+    if (loginForm) loginForm.classList.add("hidden");
+    if (signupForm) signupForm.classList.add("hidden");
+    if (forgotForm) forgotForm.classList.add("hidden");
+    if (verifyForm) verifyForm.classList.add("hidden");
+    if (faceForm) faceForm.classList.add("hidden");
+}
+
 function openLoginForm() {
-    loginForm.classList.remove("hidden");
-    signupForm.classList.add("hidden");
-    forgotForm.classList.add("hidden");
+    hideAllAuthForms();
+
+    if (loginForm) {
+        loginForm.classList.remove("hidden");
+    }
 
     showAuthMessage("", "");
 }
 
 function openSignupForm() {
-    loginForm.classList.add("hidden");
-    signupForm.classList.remove("hidden");
-    forgotForm.classList.add("hidden");
+    hideAllAuthForms();
+
+    if (signupForm) {
+        signupForm.classList.remove("hidden");
+    }
 
     showAuthMessage("", "");
 }
 
 function openForgotForm() {
-    loginForm.classList.add("hidden");
-    signupForm.classList.add("hidden");
-    forgotForm.classList.remove("hidden");
+    hideAllAuthForms();
+
+    if (forgotForm) {
+        forgotForm.classList.remove("hidden");
+    }
 
     showAuthMessage("", "");
 }
+
+function openVerifyForm(email) {
+    hideAllAuthForms();
+
+    if (verifyForm) {
+        verifyForm.classList.remove("hidden");
+    }
+
+    if (verifyEmailText) {
+        verifyEmailText.innerHTML = email || "your email";
+    }
+
+    showAuthMessage("Verification email sent. Please verify your email.", "success");
+}
+
+function openFaceForm() {
+    hideAllAuthForms();
+
+    if (faceForm) {
+        faceForm.classList.remove("hidden");
+    }
+
+    showAuthMessage("", "");
+
+    startCameraDemo();
+}
+
+/*=========================================================
+ FORM BUTTON EVENTS
+=========================================================*/
 
 if (showSignup) {
     showSignup.addEventListener("click", openSignupForm);
@@ -721,8 +813,21 @@ if (backToLogin) {
     backToLogin.addEventListener("click", openLoginForm);
 }
 
+if (verifyBackLogin) {
+    verifyBackLogin.addEventListener("click", openLoginForm);
+}
+
+if (faceVerifyBtn) {
+    faceVerifyBtn.addEventListener("click", openFaceForm);
+}
+
+if (faceBackLogin) {
+    faceBackLogin.addEventListener("click", openLoginForm);
+}
+
 /*=========================================================
  SIGN UP NEW USER
+ After creating account, stay on verify email page.
 =========================================================*/
 
 if (signupBtn) {
@@ -750,7 +855,7 @@ if (signupBtn) {
                 return user.updateProfile({
                     displayName: name
                 }).then(() => {
-                    return user.sendEmailVerification();
+                    return user.sendEmailVerification(emailActionSettings);
                 }).then(() => {
                     return database.ref("SmartHome/users/" + user.uid).set({
                         name: name,
@@ -758,24 +863,75 @@ if (signupBtn) {
                         role: "user",
                         createdAt: Date.now()
                     });
+                }).then(() => {
+                    openVerifyForm(email);
                 });
-            })
-            .then(() => {
-                showAuthMessage("Account created. Verification email sent. Please verify your email, then sign in.", "success");
-
-                auth.signOut();
-
-                signupName.value = "";
-                signupEmail.value = "";
-                signupPassword.value = "";
-
-                openLoginForm();
             })
             .catch((error) => {
                 showAuthMessage(error.message, "error");
             })
             .finally(() => {
                 signupBtn.innerHTML = "Create Account";
+            });
+    });
+}
+
+/*=========================================================
+ CHECK EMAIL VERIFICATION
+=========================================================*/
+
+function checkEmailVerificationNow() {
+    const user = auth.currentUser;
+
+    if (!user) {
+        openLoginForm();
+        showAuthMessage("Please sign in again.", "error");
+        return;
+    }
+
+    user.reload()
+        .then(() => {
+            if (auth.currentUser.emailVerified) {
+                if (authScreen) {
+                    authScreen.style.display = "none";
+                }
+
+                if (logoutBtn) {
+                    logoutBtn.style.display = "inline-flex";
+                }
+
+                showAuthMessage("", "");
+            } else {
+                openVerifyForm(auth.currentUser.email);
+                showAuthMessage("Email still not verified. Check your mail/spam.", "error");
+            }
+        });
+}
+
+if (checkVerifyBtn) {
+    checkVerifyBtn.addEventListener("click", checkEmailVerificationNow);
+}
+
+/*=========================================================
+ RESEND VERIFICATION EMAIL
+=========================================================*/
+
+if (resendVerifyBtn) {
+    resendVerifyBtn.addEventListener("click", () => {
+        const user = auth.currentUser;
+
+        if (!user) {
+            openLoginForm();
+            showAuthMessage("Please sign in again.", "error");
+            return;
+        }
+
+        user.sendEmailVerification(emailActionSettings)
+            .then(() => {
+                showAuthMessage("Verification email sent again. Check inbox/spam.", "success");
+            })
+            .catch((error) => {
+                showAuthMessage(error.message, "error");
             });
     });
 }
@@ -800,17 +956,20 @@ if (loginBtn) {
             .then((userCredential) => {
                 const user = userCredential.user;
 
-                if (!user.emailVerified) {
-                    user.sendEmailVerification();
+                if (user.emailVerified) {
+                    if (authScreen) {
+                        authScreen.style.display = "none";
+                    }
 
-                    auth.signOut();
+                    if (logoutBtn) {
+                        logoutBtn.style.display = "inline-flex";
+                    }
 
-                    showAuthMessage("Email not verified. Verification email sent again.", "error");
-
-                    return;
+                    showAuthMessage("", "");
+                } else {
+                    user.sendEmailVerification(emailActionSettings);
+                    openVerifyForm(user.email);
                 }
-
-                showAuthMessage("Login successful.", "success");
             })
             .catch((error) => {
                 showAuthMessage(error.message, "error");
@@ -836,9 +995,9 @@ if (forgotBtn) {
 
         forgotBtn.innerHTML = "Sending...";
 
-        auth.sendPasswordResetEmail(email)
+        auth.sendPasswordResetEmail(email, emailActionSettings)
             .then(() => {
-                showAuthMessage("Password reset email sent. Check your inbox.", "success");
+                showAuthMessage("Password reset email sent. Check your inbox/spam.", "success");
 
                 forgotEmail.value = "";
 
@@ -854,19 +1013,112 @@ if (forgotBtn) {
 }
 
 /*=========================================================
+ CAMERA DEMO
+ This only asks camera permission.
+ Real face matching needs WebAuthn/passkeys or backend.
+=========================================================*/
+
+function startCameraDemo() {
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        if (faceStatus) {
+            faceStatus.innerHTML = "Camera not supported. Use username and password.";
+        }
+
+        return;
+    }
+
+    navigator.mediaDevices.getUserMedia({
+        video: {
+            facingMode: "user"
+        },
+        audio: false
+    })
+    .then((stream) => {
+        if (faceVideo) {
+            faceVideo.srcObject = stream;
+        }
+
+        if (faceStatus) {
+            faceStatus.innerHTML = "Camera opened. Face ID setup is not added yet. Use username and password below.";
+        }
+    })
+    .catch(() => {
+        if (faceStatus) {
+            faceStatus.innerHTML = "Camera permission denied. Use username and password.";
+        }
+    });
+}
+
+/*=========================================================
+ SHA-256 HASH FUNCTION
+=========================================================*/
+
+async function sha256(text) {
+    const encoder = new TextEncoder();
+
+    const data = encoder.encode(text);
+
+    const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+
+    return hashArray
+        .map((byte) => byte.toString(16).padStart(2, "0"))
+        .join("");
+}
+
+/*=========================================================
+ LOCAL HASHED USERNAME/PASSWORD LOGIN
+ Usernames and passwords are case-insensitive.
+=========================================================*/
+
+if (localLoginBtn) {
+    localLoginBtn.addEventListener("click", async () => {
+        const username = localUserName.value.trim().toLowerCase();
+        const password = localUserPassword.value.trim().toLowerCase();
+
+        if (username === "" || password === "") {
+            showAuthMessage("Enter username and password.", "error");
+            return;
+        }
+
+        const loginHash = await sha256(
+            username + ":" + password + ":" + LOCAL_AUTH_SALT
+        );
+
+        const allowed = LOCAL_USERS.some((user) => user.hash === loginHash);
+
+        if (allowed) {
+            sessionStorage.setItem("localDemoAuth", "true");
+
+            if (authScreen) {
+                authScreen.style.display = "none";
+            }
+
+            if (logoutBtn) {
+                logoutBtn.style.display = "inline-flex";
+            }
+
+            addNotification("Local demo login successful.");
+        } else {
+            showAuthMessage("Invalid local username or password.", "error");
+        }
+    });
+}
+
+/*=========================================================
  LOGOUT
 =========================================================*/
 
 if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
+        sessionStorage.removeItem("localDemoAuth");
         auth.signOut();
     });
 }
 
 /*=========================================================
  AUTH STATE CHECK
- If user logged in and email verified → show dashboard
- Else → show login page
 =========================================================*/
 
 auth.onAuthStateChanged((user) => {
@@ -874,17 +1126,58 @@ auth.onAuthStateChanged((user) => {
         return;
     }
 
-    if (user && user.emailVerified) {
+    if (sessionStorage.getItem("localDemoAuth") === "true") {
         authScreen.style.display = "none";
 
         if (logoutBtn) {
             logoutBtn.style.display = "inline-flex";
         }
-    } else {
-        authScreen.style.display = "flex";
 
-        if (logoutBtn) {
-            logoutBtn.style.display = "none";
-        }
+        return;
+    }
+
+    if (user) {
+        user.reload()
+            .then(() => {
+                if (auth.currentUser.emailVerified) {
+                    authScreen.style.display = "none";
+
+                    if (logoutBtn) {
+                        logoutBtn.style.display = "inline-flex";
+                    }
+                } else {
+                    authScreen.style.display = "flex";
+
+                    if (logoutBtn) {
+                        logoutBtn.style.display = "none";
+                    }
+
+                    openVerifyForm(auth.currentUser.email);
+                }
+            });
+
+        return;
+    }
+
+    authScreen.style.display = "flex";
+
+    if (logoutBtn) {
+        logoutBtn.style.display = "none";
     }
 });
+
+/*=========================================================
+ IF USER RETURNS FROM EMAIL VERIFICATION LINK
+=========================================================*/
+
+if (window.location.search.includes("verified=1")) {
+    setTimeout(() => {
+        checkEmailVerificationNow();
+
+        window.history.replaceState(
+            {},
+            document.title,
+            window.location.pathname
+        );
+    }, 1500);
+}
