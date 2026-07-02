@@ -627,13 +627,15 @@ addNotification("Dashboard loaded successfully");
 
 console.log("Smart Home Automation V2 Dark Theme loaded");
 
-
 /*=========================================================
- FIREBASE AUTH LOGIN SYSTEM V2
+ FIREBASE AUTH LOGIN SYSTEM V2 - CLEAN FINAL
  Email Verification Page + Camera Demo + Local Hashed Login
 =========================================================*/
 
 const auth = firebase.auth();
+
+/* Keep Firebase login saved after refresh and email verification redirect */
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
 
 /*=========================================================
  AUTH ELEMENTS
@@ -695,7 +697,7 @@ const emailActionSettings = {
 
 /*=========================================================
  LOCAL DEMO HASHED USERS
- Demo only. Not real production security.
+ Demo only. Do not use this as final security.
 =========================================================*/
 
 const LOCAL_AUTH_SALT = "AK_SMART_HOME_V2";
@@ -713,7 +715,7 @@ const LOCAL_USERS = [
 ];
 
 /*=========================================================
- MESSAGE FUNCTION
+ AUTH MESSAGE FUNCTION
 =========================================================*/
 
 function showAuthMessage(message, type) {
@@ -722,7 +724,21 @@ function showAuthMessage(message, type) {
     }
 
     authMessage.innerHTML = message;
-    authMessage.className = "auth-message " + type;
+    authMessage.className = "auth-message " + (type || "");
+}
+
+/*=========================================================
+ STOP CAMERA STREAM
+=========================================================*/
+
+function stopFaceCameraStream() {
+    if (faceVideo && faceVideo.srcObject) {
+        faceVideo.srcObject.getTracks().forEach((track) => {
+            track.stop();
+        });
+
+        faceVideo.srcObject = null;
+    }
 }
 
 /*=========================================================
@@ -739,6 +755,7 @@ function hideAllAuthForms() {
 
 function openLoginForm() {
     hideAllAuthForms();
+    stopFaceCameraStream();
 
     if (loginForm) {
         loginForm.classList.remove("hidden");
@@ -749,6 +766,7 @@ function openLoginForm() {
 
 function openSignupForm() {
     hideAllAuthForms();
+    stopFaceCameraStream();
 
     if (signupForm) {
         signupForm.classList.remove("hidden");
@@ -759,6 +777,7 @@ function openSignupForm() {
 
 function openForgotForm() {
     hideAllAuthForms();
+    stopFaceCameraStream();
 
     if (forgotForm) {
         forgotForm.classList.remove("hidden");
@@ -769,6 +788,7 @@ function openForgotForm() {
 
 function openVerifyForm(email) {
     hideAllAuthForms();
+    stopFaceCameraStream();
 
     if (verifyForm) {
         verifyForm.classList.remove("hidden");
@@ -827,7 +847,7 @@ if (faceBackLogin) {
 
 /*=========================================================
  SIGN UP NEW USER
- After creating account, stay on verify email page.
+ After creating account, stay on the verify email page.
 =========================================================*/
 
 if (signupBtn) {
@@ -864,6 +884,9 @@ if (signupBtn) {
                         createdAt: Date.now()
                     });
                 }).then(() => {
+                    signupName.value = "";
+                    signupEmail.value = "";
+                    signupPassword.value = "";
                     openVerifyForm(email);
                 });
             })
@@ -885,13 +908,13 @@ function checkEmailVerificationNow() {
 
     if (!user) {
         openLoginForm();
-        showAuthMessage("Please sign in again.", "error");
+        showAuthMessage("Verification completed. Please sign in once to continue.", "success");
         return;
     }
 
     user.reload()
         .then(() => {
-            if (auth.currentUser.emailVerified) {
+            if (auth.currentUser && auth.currentUser.emailVerified) {
                 if (authScreen) {
                     authScreen.style.display = "none";
                 }
@@ -903,7 +926,7 @@ function checkEmailVerificationNow() {
                 showAuthMessage("", "");
             } else {
                 openVerifyForm(auth.currentUser.email);
-                showAuthMessage("Email still not verified. Check your mail/spam.", "error");
+                showAuthMessage("Email still not verified. Check inbox or spam.", "error");
             }
         });
 }
@@ -928,7 +951,7 @@ if (resendVerifyBtn) {
 
         user.sendEmailVerification(emailActionSettings)
             .then(() => {
-                showAuthMessage("Verification email sent again. Check inbox/spam.", "success");
+                showAuthMessage("Verification email sent again. Check inbox or spam.", "success");
             })
             .catch((error) => {
                 showAuthMessage(error.message, "error");
@@ -997,10 +1020,8 @@ if (forgotBtn) {
 
         auth.sendPasswordResetEmail(email, emailActionSettings)
             .then(() => {
-                showAuthMessage("Password reset email sent. Check your inbox/spam.", "success");
-
+                showAuthMessage("Password reset email sent. Check inbox or spam.", "success");
                 forgotEmail.value = "";
-
                 openLoginForm();
             })
             .catch((error) => {
@@ -1014,8 +1035,8 @@ if (forgotBtn) {
 
 /*=========================================================
  CAMERA DEMO
- This only asks camera permission.
- Real face matching needs WebAuthn/passkeys or backend.
+ Face ID / Passkey can be added later.
+ This page opens only when Verify with Face is clicked.
 =========================================================*/
 
 function startCameraDemo() {
@@ -1039,7 +1060,7 @@ function startCameraDemo() {
         }
 
         if (faceStatus) {
-            faceStatus.innerHTML = "Camera opened. Face ID setup is not added yet. Use username and password below.";
+            faceStatus.innerHTML = "Camera opened. Real mobile Face ID can be added later using passkeys.";
         }
     })
     .catch(() => {
@@ -1055,11 +1076,8 @@ function startCameraDemo() {
 
 async function sha256(text) {
     const encoder = new TextEncoder();
-
     const data = encoder.encode(text);
-
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-
     const hashArray = Array.from(new Uint8Array(hashBuffer));
 
     return hashArray
@@ -1068,7 +1086,7 @@ async function sha256(text) {
 }
 
 /*=========================================================
- LOCAL HASHED USERNAME/PASSWORD LOGIN
+ LOCAL HASHED USERNAME / PASSWORD LOGIN
  Usernames and passwords are case-insensitive.
 =========================================================*/
 
@@ -1090,6 +1108,7 @@ if (localLoginBtn) {
 
         if (allowed) {
             sessionStorage.setItem("localDemoAuth", "true");
+            stopFaceCameraStream();
 
             if (authScreen) {
                 authScreen.style.display = "none";
@@ -1113,12 +1132,18 @@ if (localLoginBtn) {
 if (logoutBtn) {
     logoutBtn.addEventListener("click", () => {
         sessionStorage.removeItem("localDemoAuth");
+        stopFaceCameraStream();
         auth.signOut();
     });
 }
 
 /*=========================================================
  AUTH STATE CHECK
+ Main fix:
+ - No user          -> Login page
+ - Unverified user  -> Verify email page
+ - Verified user    -> Dashboard
+ - Face page opens ONLY after clicking Verify with Face
 =========================================================*/
 
 auth.onAuthStateChanged((user) => {
@@ -1136,38 +1161,44 @@ auth.onAuthStateChanged((user) => {
         return;
     }
 
-    if (user) {
-        user.reload()
-            .then(() => {
-                if (auth.currentUser.emailVerified) {
-                    authScreen.style.display = "none";
+    if (!user) {
+        authScreen.style.display = "flex";
 
-                    if (logoutBtn) {
-                        logoutBtn.style.display = "inline-flex";
-                    }
-                } else {
-                    authScreen.style.display = "flex";
+        if (logoutBtn) {
+            logoutBtn.style.display = "none";
+        }
 
-                    if (logoutBtn) {
-                        logoutBtn.style.display = "none";
-                    }
-
-                    openVerifyForm(auth.currentUser.email);
-                }
-            });
+        openLoginForm();
 
         return;
     }
 
-    authScreen.style.display = "flex";
+    user.reload()
+        .then(() => {
+            const refreshedUser = auth.currentUser;
 
-    if (logoutBtn) {
-        logoutBtn.style.display = "none";
-    }
+            if (refreshedUser && refreshedUser.emailVerified) {
+                authScreen.style.display = "none";
+
+                if (logoutBtn) {
+                    logoutBtn.style.display = "inline-flex";
+                }
+
+                stopFaceCameraStream();
+            } else {
+                authScreen.style.display = "flex";
+
+                if (logoutBtn) {
+                    logoutBtn.style.display = "none";
+                }
+
+                openVerifyForm(refreshedUser ? refreshedUser.email : "your email");
+            }
+        });
 });
 
 /*=========================================================
- IF USER RETURNS FROM EMAIL VERIFICATION LINK
+ EMAIL VERIFICATION RETURN HANDLER
 =========================================================*/
 
 if (window.location.search.includes("verified=1")) {
@@ -1182,115 +1213,5 @@ if (window.location.search.includes("verified=1")) {
     }, 1500);
 }
 
+console.log("Clean Firebase Auth login system loaded.");
 
-
-/*=========================================================
- MOBILE FIX: OPEN LOGIN PAGE FIRST
- This prevents Face ID page opening automatically.
-=========================================================*/
-
-sessionStorage.removeItem("localDemoAuth");
-
-function stopFaceCameraStreamMobileFix() {
-    const faceVideo = document.getElementById("faceVideo");
-
-    if (faceVideo && faceVideo.srcObject) {
-        faceVideo.srcObject.getTracks().forEach((track) => {
-            track.stop();
-        });
-
-        faceVideo.srcObject = null;
-    }
-}
-
-function forceNormalLoginFirstMobileFix() {
-    const authScreen = document.getElementById("authScreen");
-
-    const loginForm = document.getElementById("loginForm");
-    const signupForm = document.getElementById("signupForm");
-    const forgotForm = document.getElementById("forgotForm");
-    const verifyForm = document.getElementById("verifyForm");
-    const faceForm = document.getElementById("faceForm");
-
-    const user = firebase.auth().currentUser;
-
-    if (!user) {
-        if (authScreen) {
-            authScreen.style.display = "flex";
-        }
-
-        if (loginForm) {
-            loginForm.classList.remove("hidden");
-        }
-
-        if (signupForm) {
-            signupForm.classList.add("hidden");
-        }
-
-        if (forgotForm) {
-            forgotForm.classList.add("hidden");
-        }
-
-        if (verifyForm) {
-            verifyForm.classList.add("hidden");
-        }
-
-        if (faceForm) {
-            faceForm.classList.add("hidden");
-        }
-
-        stopFaceCameraStreamMobileFix();
-    }
-}
-
-window.addEventListener("load", () => {
-    setTimeout(() => {
-        forceNormalLoginFirstMobileFix();
-    }, 1000);
-});
-
-
-/*=========================================================
- FIX: ALWAYS OPEN NORMAL LOGIN FIRST
- Face page should open only after clicking Verify with Face
-=========================================================*/
-
-window.addEventListener("load", () => {
-    setTimeout(() => {
-        const authScreen = document.getElementById("authScreen");
-
-        const loginForm = document.getElementById("loginForm");
-        const signupForm = document.getElementById("signupForm");
-        const forgotForm = document.getElementById("forgotForm");
-        const verifyForm = document.getElementById("verifyForm");
-        const faceForm = document.getElementById("faceForm");
-
-        const user = firebase.auth().currentUser;
-
-        if (!user) {
-            if (authScreen) {
-                authScreen.style.display = "flex";
-            }
-
-            if (loginForm) {
-                loginForm.classList.remove("hidden");
-            }
-
-            if (signupForm) {
-                signupForm.classList.add("hidden");
-            }
-
-            if (forgotForm) {
-                forgotForm.classList.add("hidden");
-            }
-
-            if (verifyForm) {
-                verifyForm.classList.add("hidden");
-            }
-
-            if (faceForm) {
-                faceForm.classList.add("hidden");
-            }
-        }
-    }, 1000);
-});
