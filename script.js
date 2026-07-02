@@ -1181,3 +1181,70 @@ if (window.location.search.includes("verified=1")) {
         );
     }, 1500);
 }
+
+
+
+/*=========================================================
+ MOBILE FIX: OPEN LOGIN PAGE FIRST
+ This prevents Face ID page opening automatically.
+=========================================================*/
+
+sessionStorage.removeItem("localDemoAuth");
+
+function stopFaceCameraStreamMobileFix() {
+    const faceVideo = document.getElementById("faceVideo");
+
+    if (faceVideo && faceVideo.srcObject) {
+        faceVideo.srcObject.getTracks().forEach((track) => {
+            track.stop();
+        });
+
+        faceVideo.srcObject = null;
+    }
+}
+
+function forceNormalLoginFirstMobileFix() {
+    const authScreen = document.getElementById("authScreen");
+
+    const loginForm = document.getElementById("loginForm");
+    const signupForm = document.getElementById("signupForm");
+    const forgotForm = document.getElementById("forgotForm");
+    const verifyForm = document.getElementById("verifyForm");
+    const faceForm = document.getElementById("faceForm");
+
+    const user = firebase.auth().currentUser;
+
+    if (!user) {
+        if (authScreen) {
+            authScreen.style.display = "flex";
+        }
+
+        if (loginForm) {
+            loginForm.classList.remove("hidden");
+        }
+
+        if (signupForm) {
+            signupForm.classList.add("hidden");
+        }
+
+        if (forgotForm) {
+            forgotForm.classList.add("hidden");
+        }
+
+        if (verifyForm) {
+            verifyForm.classList.add("hidden");
+        }
+
+        if (faceForm) {
+            faceForm.classList.add("hidden");
+        }
+
+        stopFaceCameraStreamMobileFix();
+    }
+}
+
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        forceNormalLoginFirstMobileFix();
+    }, 1000);
+});
