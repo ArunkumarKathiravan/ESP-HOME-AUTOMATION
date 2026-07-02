@@ -27,183 +27,184 @@
 </head>
 
 <body>
- <!-- =====================================================
- LOGIN / SIGNUP PAGE
- This page appears before Smart Home dashboard.
-===================================================== -->
 
-<div class="auth-screen" id="authScreen">
+    <!-- =====================================================
+        LOGIN / SIGNUP / EMAIL VERIFY / FACE DEMO PAGE
+        All auth forms are kept inside authScreen and authCard.
+        This fixes the issue where Face Verify appears first.
+    ===================================================== -->
 
-    <div class="auth-card">
+    <div class="auth-screen" id="authScreen">
 
-        <div class="auth-logo">
-            <i class="fa-solid fa-house-signal"></i>
-        </div>
+        <div class="auth-card">
 
-        <h1>Smart Home Login</h1>
+            <div class="auth-logo">
+                <i class="fa-solid fa-house-signal"></i>
+            </div>
 
-        <p class="auth-subtitle">
-            Sign in to control your ESP32 Smart Home dashboard
-        </p>
+            <h1>Smart Home Login</h1>
 
-        <!-- Sign In Form -->
-        <div class="auth-form" id="loginForm">
-
-            <input
-                type="email"
-                id="loginEmail"
-                placeholder="Email address">
-
-            <input
-                type="password"
-                id="loginPassword"
-                placeholder="Password">
-
-            <button id="loginBtn">
-                Sign In
-            </button>
-
-            <p class="auth-link" id="showForgot">
-                Forgot password?
+            <p class="auth-subtitle">
+                Sign in to control your ESP32 Smart Home dashboard
             </p>
 
-            <p class="auth-switch">
-                New user?
-                <span id="showSignup">Create account</span>
-            </p>
+            <!-- Sign In Form: visible first -->
+            <div class="auth-form" id="loginForm">
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Email address">
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Password">
+
+                <button id="loginBtn" type="button">
+                    Sign In
+                </button>
+
+                <p class="auth-link" id="showForgot">
+                    Forgot password?
+                </p>
+
+                <p class="auth-switch">
+                    New user?
+                    <span id="showSignup">Create account</span>
+                </p>
+
+            </div>
+
+            <!-- Sign Up Form -->
+            <div class="auth-form hidden" id="signupForm">
+
+                <input
+                    type="text"
+                    id="signupName"
+                    placeholder="Username">
+
+                <input
+                    type="email"
+                    id="signupEmail"
+                    placeholder="Email address">
+
+                <input
+                    type="password"
+                    id="signupPassword"
+                    placeholder="Create password">
+
+                <button id="signupBtn" type="button">
+                    Create Account
+                </button>
+
+                <p class="auth-switch">
+                    Already have account?
+                    <span id="showLogin">Sign in</span>
+                </p>
+
+                <!-- Face / Camera verification demo button
+                     This button is hidden with signupForm.
+                     Face page opens only when this button is clicked. -->
+                <div class="face-demo-box">
+                    <button type="button" id="faceVerifyBtn" class="face-btn">
+                        <i class="fa-solid fa-face-smile"></i>
+                        Verify with Face
+                    </button>
+                </div>
+
+            </div>
+
+            <!-- Forgot Password Form -->
+            <div class="auth-form hidden" id="forgotForm">
+
+                <input
+                    type="email"
+                    id="forgotEmail"
+                    placeholder="Enter your registered email">
+
+                <button id="forgotBtn" type="button">
+                    Send Reset Email
+                </button>
+
+                <p class="auth-switch">
+                    Back to
+                    <span id="backToLogin">Sign in</span>
+                </p>
+
+            </div>
+
+            <!-- Email Verification Waiting Form -->
+            <div class="auth-form hidden" id="verifyForm">
+
+                <div class="verify-icon">
+                    <i class="fa-solid fa-envelope-circle-check"></i>
+                </div>
+
+                <h2>Verify Your Email</h2>
+
+                <p class="verify-text">
+                    We sent a verification link to:
+                    <br>
+                    <strong id="verifyEmailText">your email</strong>
+                </p>
+
+                <p class="verify-small">
+                    Check Inbox, Spam, or Promotions. After clicking the link, come back here.
+                </p>
+
+                <button id="checkVerifyBtn" type="button">
+                    I Verified My Email
+                </button>
+
+                <button id="resendVerifyBtn" class="secondary-auth-btn" type="button">
+                    Resend Verification Email
+                </button>
+
+                <p class="auth-switch">
+                    Back to
+                    <span id="verifyBackLogin">Sign in</span>
+                </p>
+
+            </div>
+
+            <!-- Face Verification Demo Form -->
+            <div class="auth-form hidden" id="faceForm">
+
+                <video id="faceVideo" autoplay muted playsinline></video>
+
+                <p class="verify-small" id="faceStatus">
+                    Camera will open only after clicking Verify with Face.
+                    Real Face ID can be added later using passkeys.
+                </p>
+
+                <input
+                    type="text"
+                    id="localUserName"
+                    placeholder="Username">
+
+                <input
+                    type="password"
+                    id="localUserPassword"
+                    placeholder="Password">
+
+                <button id="localLoginBtn" type="button">
+                    Continue
+                </button>
+
+                <p class="auth-switch">
+                    Back to
+                    <span id="faceBackLogin">Sign in</span>
+                </p>
+
+            </div>
+
+            <p id="authMessage" class="auth-message"></p>
 
         </div>
-
-        <!-- Sign Up Form -->
-        <div class="auth-form hidden" id="signupForm">
-
-            <input
-                type="text"
-                id="signupName"
-                placeholder="Username">
-
-            <input
-                type="email"
-                id="signupEmail"
-                placeholder="Email address">
-
-            <input
-                type="password"
-                id="signupPassword"
-                placeholder="Create password">
-
-            <button id="signupBtn">
-                Create Account
-            </button>
-
-            <p class="auth-switch">
-                Already have account?
-                <span id="showLogin">Sign in</span>
-            </p>
-
-        </div>
-          <!-- Face / Camera verification demo button -->
-<div class="face-demo-box">
-    <button type="button" id="faceVerifyBtn" class="face-btn">
-        <i class="fa-solid fa-face-smile"></i>
-        Verify with Face
-    </button>
-</div>
-        <!-- Forgot Password Form -->
-        <div class="auth-form hidden" id="forgotForm">
-
-            <input
-                type="email"
-                id="forgotEmail"
-                placeholder="Enter your registered email">
-
-            <button id="forgotBtn">
-                Send Reset Email
-            </button>
-
-            <p class="auth-switch">
-                Back to
-                <span id="backToLogin">Sign in</span>
-            </p>
-
-        </div>
-
-        <p id="authMessage" class="auth-message"></p>
 
     </div>
 
-</div>
-
-<!-- Email Verification Waiting Form -->
-<div class="auth-form hidden" id="verifyForm">
-
-    <div class="verify-icon">
-        <i class="fa-solid fa-envelope-circle-check"></i>
-    </div>
-
-    <h2>Verify Your Email</h2>
-
-    <p class="verify-text">
-        We sent a verification link to:
-        <br>
-        <strong id="verifyEmailText">your email</strong>
-    </p>
-
-    <p class="verify-small">
-        Check Inbox, Spam, or Promotions. After clicking the link, come back here.
-    </p>
-
-    <button id="checkVerifyBtn">
-        I Verified My Email
-    </button>
-
-    <button id="resendVerifyBtn" class="secondary-auth-btn">
-        Resend Verification Email
-    </button>
-
-    <p class="auth-switch">
-        Back to
-        <span id="verifyBackLogin">Sign in</span>
-    </p>
-
-</div>
-
-
-<!-- Face Verification Demo Form -->
-<div class="auth-form hidden" id="faceForm">
-
-    <video id="faceVideo" autoplay muted playsinline></video>
-
-    <p class="verify-small" id="faceStatus">
-        Camera will open. Real Face ID needs passkey/backend setup.
-    </p>
-
-    <input
-        type="text"
-        id="localUserName"
-        placeholder="Username">
-
-    <input
-        type="password"
-        id="localUserPassword"
-        placeholder="Password">
-
-    <button id="localLoginBtn">
-        Continue
-    </button>
-
-    <p class="auth-switch">
-        Back to
-        <span id="faceBackLogin">Sign in</span>
-    </p>
-
-</div>
-    
- <button class="logout-btn" id="logoutBtn">
-    <i class="fa-solid fa-right-from-bracket"></i>
-    Logout
-</button>
-    
     <!-- Main app wrapper -->
     <div class="app">
 
@@ -239,6 +240,12 @@
                 </div>
 
             </div>
+
+
+                <button class="logout-btn" id="logoutBtn" style="display: none;">
+                    <i class="fa-solid fa-right-from-bracket"></i>
+                    Logout
+                </button>
 
         </header>
 
