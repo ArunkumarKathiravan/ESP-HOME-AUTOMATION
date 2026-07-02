@@ -1248,3 +1248,49 @@ window.addEventListener("load", () => {
         forceNormalLoginFirstMobileFix();
     }, 1000);
 });
+
+
+/*=========================================================
+ FIX: ALWAYS OPEN NORMAL LOGIN FIRST
+ Face page should open only after clicking Verify with Face
+=========================================================*/
+
+window.addEventListener("load", () => {
+    setTimeout(() => {
+        const authScreen = document.getElementById("authScreen");
+
+        const loginForm = document.getElementById("loginForm");
+        const signupForm = document.getElementById("signupForm");
+        const forgotForm = document.getElementById("forgotForm");
+        const verifyForm = document.getElementById("verifyForm");
+        const faceForm = document.getElementById("faceForm");
+
+        const user = firebase.auth().currentUser;
+
+        if (!user) {
+            if (authScreen) {
+                authScreen.style.display = "flex";
+            }
+
+            if (loginForm) {
+                loginForm.classList.remove("hidden");
+            }
+
+            if (signupForm) {
+                signupForm.classList.add("hidden");
+            }
+
+            if (forgotForm) {
+                forgotForm.classList.add("hidden");
+            }
+
+            if (verifyForm) {
+                verifyForm.classList.add("hidden");
+            }
+
+            if (faceForm) {
+                faceForm.classList.add("hidden");
+            }
+        }
+    }, 1000);
+});
